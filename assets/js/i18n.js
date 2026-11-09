@@ -26,6 +26,12 @@ ro: {
   lastCar: 'Ultima mașină aleasă', seeProducts: 'Vezi produsele', yearPh: 'An fabricație', genPh: 'Generație',
   statWipers: 'ștergătoare dedicate', statBrands: 'mărci auto în filtru', statReturn: 'zile pentru retur',
   floatLed: 'LED omologat RAR', floatFit: 'Potrivire după mașină',
+  // version 2 (bold)
+  v2Title: 'Piesa potrivită.<br>Din prima<span class="hdot" role="presentation"></span>', v2Lead: 'Becuri și ștergătoare verificate pe generația mașinii tale. Alegi mașina o dată și vezi doar ce se potrivește.',
+  v2Fit: 'Compatibil', v2Cats: 'Categorii', v2CatsTitle: 'Tot ce ține de vizibilitate.', v2Count: '{n} modele',
+  v2LightTitle: 'Vezi lumina înainte să cumperi.', v2LightLead: 'Trage de cursor. Cu cât temperatura de culoare e mai mare, cu atât lumina e mai albă.',
+  v2KLabel: 'Temperatura de culoare', v2KTyp: 'Tipic pentru {x}', v2KShow: 'Vezi becurile {x}', v2KAll: 'Vezi toate becurile',
+  v2Ver: 'Varianta de design', v2V1: 'Clasic', v2V2: 'Bold',
   // home
   catsTitle: 'Ce cauți pentru mașina ta?', catsLead: 'Categoriile magazinului, cu produse verificate pentru fiecare mașină.',
   catHalogen: 'Becuri halogen', catHalogenD: 'H1, H4, H7, H11 și alte tipuri omologate.',
@@ -159,6 +165,12 @@ de: {
   lastCar: 'Zuletzt gewähltes Fahrzeug', seeProducts: 'Produkte ansehen', yearPh: 'Baujahr', genPh: 'Generation',
   statWipers: 'fahrzeugspezifische Wischer', statBrands: 'Automarken im Filter', statReturn: 'Tage Rückgabe',
   floatLed: 'LED mit RAR-Zulassung', floatFit: 'Passend zum Fahrzeug',
+  // version 2 (bold)
+  v2Title: 'Das passende Teil.<br>Auf Anhieb<span class="hdot" role="presentation"></span>', v2Lead: 'Lampen und Wischer, geprüft für die Generation Ihres Autos. Einmal Fahrzeug wählen und nur Passendes sehen.',
+  v2Fit: 'Passt', v2Cats: 'Kategorien', v2CatsTitle: 'Alles für gute Sicht.', v2Count: '{n} Modelle',
+  v2LightTitle: 'Sehen Sie das Licht vor dem Kauf.', v2LightLead: 'Ziehen Sie den Regler. Je höher die Farbtemperatur, desto weißer das Licht.',
+  v2KLabel: 'Farbtemperatur', v2KTyp: 'Typisch für {x}', v2KShow: '{x}-Lampen ansehen', v2KAll: 'Alle Lampen ansehen',
+  v2Ver: 'Design-Variante', v2V1: 'Klassisch', v2V2: 'Bold',
   catsTitle: 'Was suchen Sie für Ihr Auto?', catsLead: 'Unsere Kategorien – mit geprüfter Passform für jedes Fahrzeug.',
   catHalogen: 'Halogenlampen', catHalogenD: 'H1, H4, H7, H11 und weitere zugelassene Typen.',
   catLed: 'LED-Lampen', catLedD: 'Mehr Sicht dank moderner Technik.',

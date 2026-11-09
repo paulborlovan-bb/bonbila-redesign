@@ -9,7 +9,16 @@ It keeps Bonbila's logo, layout and backend components. Only the design of those
 
 **Floating menu:** the header is a dark capsule that floats above the page and stays on top while scrolling. On desktop, "Becuri auto" and "Ștergătoare" open floating menu panels (by socket, technology, brand, maker, and the saved car), and search opens as a floating panel with frequent searches. On phones, the menu opens as a floating night card with the two categories, the saved car, sockets and links, and the bottom bars (Filters/Sort, Add to cart, Checkout) float as capsules too. In Elementor this maps to a sticky header with a Mega Menu widget; the panels use the same night colours as the header.
 
+**Version 2, "Bold" (second design option):** the same pages, data, finder, filters, cart and checkout, in a dark, bolder look. Pages are black and Bonbila yellow appears only where something lights up or where the main action is. Product photos stand on light silver "studio" panels, the only light surfaces. One typeface, Archivo, in three widths: wide for headlines and prices, normal for text, narrow for specs. JetBrains Mono is used only for codes people copy (SKU, VIN). Both fonts are self-hosted and licensed under the SIL Open Font License. The homepage has its own layout:
+- a full-width headlight photo under the floating menu, with a large headline and the finder as a glass panel;
+- two floating cards: a "Compatibil" check with the saved car, and H7 LED 6000K;
+- four dark category tiles, each object lit from behind;
+- a light-colour slider (2700–6700 K) that changes a headlight beam and links to the matching bulbs (halogen, LED, or all bulbs for xenon).
+
+The footer of both versions has a "Varianta de design: Clasic | Bold" switch. Technically, `build.mjs` writes the v2 pages to `/v2/` and `/v2/de/` (`<html data-v="2">`), and generates `assets/css/v2.css` from `style.css` (dark token mapping) plus `assets/css/v2-bold.css`. So edit those two files, not `v2.css`. In `app.js`, only the homepage branches (`pageHomeV2()`, `bindBeam()`); every other page is shared.
+
 **Live:** https://paulborlovan-bb.github.io/bonbila-redesign/ · German: https://paulborlovan-bb.github.io/bonbila-redesign/de/
+**Live, version 2 (Bold):** https://paulborlovan-bb.github.io/bonbila-redesign/v2/ · German: https://paulborlovan-bb.github.io/bonbila-redesign/v2/de/
 
 | Page | Romanian | German | Matches on the WP site |
 |---|---|---|---|
