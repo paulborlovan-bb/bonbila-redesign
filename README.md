@@ -5,6 +5,8 @@ It keeps Bonbila's logo, layout and backend components. Only the design of those
 
 **Round 2 (day & night):** light "day" sections for shopping, alternating with "night" sections in Bonbila navy: header, hero, the lighting section, parts on request, footer and the order summary. Small details carry the brand: the yellow dot from the logo marks the current or selected item, wiper lengths are drawn as dimension lines, bulbs show their socket and light colour (Kelvin), and the add button is a small yellow disc with "+".
 
+**Floating menu:** the header is a dark capsule that floats above the page and stays on top while scrolling. On desktop, "Becuri auto" and "Ștergătoare" open floating menu panels (by socket, technology, brand, maker, and the saved car), and search opens as a floating panel with frequent searches. On phones, the menu opens as a floating night card with the two categories, the saved car, sockets and links, and the bottom bars (Filters/Sort, Add to cart, Checkout) float as capsules too. In Elementor this maps to a sticky header with a Mega Menu widget; the panels use the same night colours as the header.
+
 **Live:** https://paulborlovan-bb.github.io/bonbila-redesign/ · German: https://paulborlovan-bb.github.io/bonbila-redesign/de/
 
 | Page | Romanian | German | Matches on the WP site |

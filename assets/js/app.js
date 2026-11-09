@@ -132,9 +132,9 @@ function langSwitch() {
     <a href="${LANG === 'de' ? '#' : other}" lang="de" hreflang="de" ${LANG === 'de' ? 'aria-current="true"' : ''}>DE</a></nav>`;
 }
 function garageChip() {
-  if (!garage) return `<a class="garage garage--empty" href="index.html#finder">${icon('car')} ${t('chooseCar')}</a>`;
+  if (!garage) return `<a class="garage garage--empty" href="index.html#finder" aria-label="${t('chooseCar')}">${icon('car')}<span class="garage__t">${t('chooseCar')}</span></a>`;
   const href = link('categorie.html', { vehicle_type: garage.type || 'wipers', vehicle_make: garage.make, vehicle_model: garage.model, vehicle_generation: garage.slug });
-  return `<div class="garage"><a href="${href}" title="${t('myCar')}">${logo(garage.make)}<span>${esc(carLabel(garage))} <small>${esc(carYears(garage))}</small></span></a>
+  return `<div class="garage"><a href="${href}" title="${t('myCar')}" aria-label="${t('myCar')}: ${esc(carLabel(garage))}">${logo(garage.make)}<span class="garage__t">${esc(carLabel(garage))} <small>${esc(carYears(garage))}</small></span></a>
     <button class="iconbtn" type="button" data-cleargarage aria-label="${t('removeCar')}">${icon('close', 'ico--sm')}</button></div>`;
 }
 const NAV = [
@@ -146,46 +146,133 @@ const NAV = [
 ];
 function currentNav() { if (PAGE === 'category' || PAGE === 'masini') return params.get('vehicle_type') || (params.get('q') ? '' : 'wipers'); if (PAGE === 'product') { const p = byId(params.get('id')); return p ? p.type : ''; } return ''; }
 
+/* floating menu panels (desktop) and the car block they share with the phone menu */
+const carHref = type => link('categorie.html', { vehicle_type: type, vehicle_make: garage.make, vehicle_model: garage.model, vehicle_generation: garage.slug });
+function mmCar(type) {
+  return `<p class="mm__h">${t('mmYourCar')}</p>` + (garage
+    ? `<div class="mm__carbox">${logo(garage.make)}<div><b>${esc(carLabel(garage))}</b><small>${esc(carYears(garage))}</small></div></div><a class="btn btn--primary btn--sm" href="${carHref(type)}">${t('mmShowFor')}</a>`
+    : `<p class="mm__txt">${t('mmPickD')}</p><a class="btn btn--primary btn--sm" href="index.html#finder">${t('chooseCar')}</a>`);
+}
+function megaBulbs() {
+  const u = q => link('categorie.html', { vehicle_type: 'bulbs', ...q });
+  return `<div class="mm" id="mm-bulbs" data-mmpanel hidden><div class="mm__grid">
+    <div class="mm__col"><p class="mm__h">${t('bySocket')}</p>
+      <div class="mm__socks">${['H7', 'H4', 'H1', 'H11', 'W5W'].map(v => `<a href="${u({ bulb: v })}">${v}</a>`).join('')}</div>
+      <p class="mm__h">${t('fTech')}</p>
+      <ul class="mm__links"><li><a href="${u({ tech: 'Halogen' })}">Halogen</a></li><li><a href="${u({ tech: 'LED' })}">LED</a></li></ul></div>
+    <div class="mm__col mm__tiles">
+      <a class="mm__tile" href="${u({ tech: 'Halogen' })}"><span class="mm__img"><img src="${img('cat/bec-halogen-h7-v1.webp')}" alt="" width="720" height="480" loading="lazy"></span><b>${t('catHalogen')}</b></a>
+      <a class="mm__tile" href="${u({ tech: 'LED' })}"><span class="mm__img"><img src="${img('cat/bec-led-h7-v1.webp')}" alt="" width="720" height="480" loading="lazy"></span><b>${t('catLed')}</b></a></div>
+    <div class="mm__col mm__car">${mmCar('bulbs')}</div>
+  </div><div class="mm__foot"><a class="arrowlink" href="${u({})}">${t('lightAll')}</a></div></div>`;
+}
+function megaWipers() {
+  const u = q => link('categorie.html', { vehicle_type: 'wipers', ...q });
+  return `<div class="mm" id="mm-wipers" data-mmpanel hidden><div class="mm__grid">
+    <div class="mm__col"><p class="mm__h">${t('brandsTitle')}</p>
+      <div class="mm__logos">${D.popular.slice(0, 8).map(m => `<a href="${u({ vehicle_make: m })}">${logo(m)}<span>${esc(m === 'Mercedes-Benz' ? 'Mercedes' : m === 'Volkswagen' ? 'VW' : m)}</span></a>`).join('')}</div></div>
+    <div class="mm__col mm__tiles">
+      <a class="mm__tile" href="${u({})}"><span class="mm__img"><img src="${img('cat/stergatoare-auto-v1.webp')}" alt="" width="720" height="480" loading="lazy"></span><b>${t('catWipers')}</b></a>
+      <div><p class="mm__h">${t('fMaker')}</p><ul class="mm__links">${['Bosch', 'Valeo', 'SWF'].map(m => `<li><a href="${u({ maker: m })}">${m}</a></li>`).join('')}</ul></div></div>
+    <div class="mm__col mm__car">${mmCar('wipers')}</div>
+  </div><div class="mm__foot"><a class="arrowlink" href="${u({})}">${t('wipAll')}</a></div></div>`;
+}
+
 function header() {
   const cur = currentNav();
-  const total = money(cartTotal());
+  const navBtn = (id, k) => `<li><button class="hnav__i" type="button" aria-expanded="false" aria-controls="mm-${id}" data-mm="${id}" ${cur === id ? 'aria-current="page"' : ''}>${t(k)}${icon('down')}</button></li>`;
+  const popular = [['H7', { vehicle_type: 'bulbs', bulb: 'H7' }], ['AeroTwin', { q: 'AeroTwin' }], ['Dacia Logan', { q: 'Dacia Logan' }], ['VW Golf', { q: 'Golf' }], ['LED', { vehicle_type: 'bulbs', tech: 'LED' }]];
   return `<a class="skip" href="#main">${t('skip')}</a>
   <div class="topbar"><div class="wrap">
     <ul><li>${icon('truck')}${t('usp1')}</li><li>${icon('ret')}${t('usp2')}</li><li>${icon('headset')}${t('usp3')}</li></ul>
-    <div class="topbar__right"><a href="tel:+40771147147">${icon('phone', 'ico--sm')}${t('phone')}</a><a href="mailto:${t('email')}">${icon('mail', 'ico--sm')}${t('email')}</a></div>
+    <div class="topbar__right">${langSwitch()}<a href="tel:+40771147147">${icon('phone', 'ico--sm')}${t('phone')}</a><a href="mailto:${t('email')}">${icon('mail', 'ico--sm')}${t('email')}</a></div>
   </div></div>
-  <header class="header">
-    <div class="wrap header__row">
+  <header class="header" data-header>
+    <div class="hbar">
       <a class="logo" href="index.html"><img src="${img('bonbila-logo-negative.png')}" alt="Bonbila Auto – ${t('home')}" width="149" height="44"></a>
-      <div class="header__search">${searchBox()}</div>
-      <div class="header__actions">
-        ${langSwitch()}
-        <a class="hact" href="#account"><span class="iconbtn">${icon('user', 'ico--lg')}</span><span><b>${t('account')}</b><small>${t('login')}</small></span></a>
-        <a class="iconbtn hicon-only" href="#account" aria-label="${t('account')}">${icon('user', 'ico--lg')}</a>
-        <a class="hact cartbtn" href="cos.html" data-cartlink><span class="iconbtn">${icon('cart', 'ico--lg')}<span class="count" data-cartcount>${cartCount()}</span></span><span><b>${t('cart')}</b><small data-carttotal>${total}</small></span></a>
-        <a class="iconbtn hicon-only cartbtn" href="cos.html" data-cartlink>${icon('cart', 'ico--lg')}<span class="count" data-cartcount>${cartCount()}</span></a>
-        <button class="iconbtn menubtn" type="button" aria-label="${t('menu')}" aria-expanded="false" aria-controls="drawer" data-open-drawer>${icon('menu', 'ico--lg')}</button>
+      <nav class="hnav" aria-label="${t('shop')}"><ul>
+        ${navBtn('bulbs', 'navBulbs')}${navBtn('wipers', 'navWipers')}
+        <li><a class="hnav__i" href="index.html#request">${t('navParts')}</a></li>
+        <li class="hnav__more"><a class="hnav__i" href="index.html#guides">${t('navGuides')}</a></li>
+      </ul></nav>
+      <button class="hsearch-btn" type="button" aria-expanded="false" aria-controls="hsearch" data-open-search aria-label="${t('searchLabel')}">${icon('search')}<span class="hs-l" aria-hidden="true">${t('searchPh')}</span><span class="hs-s" aria-hidden="true">${t('searchBtn')}</span></button>
+      <div class="hright">
+        <span class="hgarage" data-garage>${garageChip()}</span>
+        <a class="iconbtn hacc" href="#account" aria-label="${t('account')}">${icon('user')}</a>
+        <a class="iconbtn cartbtn" href="cos.html" data-cartlink><span class="sr-only">${t('cart')}</span>${icon('cart')}<span class="count" data-cartcount>${cartCount()}</span></a>
+        <button class="iconbtn menubtn" type="button" aria-label="${t('menu')}" aria-expanded="false" aria-controls="drawer" data-open-drawer>${icon('menu')}</button>
       </div>
+      <div class="hsearch" id="hsearch" hidden>
+        ${searchBox()}
+        <div class="hsearch__hint"><span>${t('popSearch')}</span>${popular.map(([l, q]) => `<a href="${link('categorie.html', q)}">${l}</a>`).join('')}</div>
+      </div>
+      ${megaBulbs()}${megaWipers()}
     </div>
-    <nav class="mainnav" aria-label="${t('shop')}"><div class="wrap">
-      ${NAV.map(([k, ic, href, id]) => `<a class="nav-i" href="${href}" ${cur === id ? 'aria-current="page"' : ''}>${icon(ic)}${t(k)}</a>`).join('')}
-      <span data-garage>${garageChip()}</span>
-    </div></nav>
   </header>
   <div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="${t('menu')}" hidden>
     <div class="drawer__panel">
-      <div class="drawer__head"><img src="${img('bonbila-logo.png')}" alt="Bonbila Auto" width="115" height="34"><button class="iconbtn" type="button" data-close-drawer aria-label="${t('close')}">${icon('close', 'ico--lg')}</button></div>
-      <div class="drawer__nav">${NAV.map(([k, ic, href]) => `<a href="${href}">${icon(ic, 'ico--lg')}${t(k)}${icon('right')}</a>`).join('')}
-        <a href="${garage ? link('categorie.html', { vehicle_type: garage.type || 'wipers', vehicle_make: garage.make, vehicle_model: garage.model, vehicle_generation: garage.slug }) : 'index.html#finder'}">${icon('car', 'ico--lg')}${garage ? esc(carLabel(garage)) : t('chooseCar')}${icon('right')}</a>
+      <div class="drawer__head"><a class="logo" href="index.html"><img src="${img('bonbila-logo-negative.png')}" alt="Bonbila Auto – ${t('home')}" width="149" height="44"></a><button class="iconbtn" type="button" data-close-drawer aria-label="${t('close')}">${icon('close', 'ico--lg')}</button></div>
+      <div class="drawer__cats">
+        <a class="dcat" href="${link('categorie.html', { vehicle_type: 'bulbs' })}" ${cur === 'bulbs' ? 'aria-current="page"' : ''}><span class="dcat__img"><img src="${img('cat/bec-halogen-h7-v1.webp')}" alt="" width="720" height="480" loading="lazy"></span><b>${t('navBulbs')}</b></a>
+        <a class="dcat" href="${link('categorie.html', { vehicle_type: 'wipers' })}" ${cur === 'wipers' ? 'aria-current="page"' : ''}><span class="dcat__img"><img src="${img('cat/stergatoare-auto-v1.webp')}" alt="" width="720" height="480" loading="lazy"></span><b>${t('navWipers')}</b></a>
       </div>
+      <div class="drawer__car">${mmCar('wipers')}</div>
+      <div class="drawer__socks"><p class="mm__h">${t('bySocket')}</p><div class="mm__socks">${['H7', 'H4', 'H1', 'H11', 'W5W', 'LED'].map(v => `<a href="${link('categorie.html', { vehicle_type: 'bulbs', [v === 'LED' ? 'tech' : 'bulb']: v })}">${v}</a>`).join('')}</div></div>
+      <nav class="drawer__nav" aria-label="${t('menu')}">
+        <a href="index.html#request">${t('navParts')}${icon('right')}</a>
+        <a href="index.html#guides">${t('navGuides')}${icon('right')}</a>
+        <a href="#contact">${t('navContact')}${icon('right')}</a>
+        <a href="#account">${t('account')}${icon('right')}</a>
+      </nav>
       <div class="drawer__foot">
         ${langSwitch()}
-        <a href="tel:+40771147147" class="row">${icon('phone')}<b>${t('phone')}</b></a>
-        <a href="mailto:${t('email')}" class="row">${icon('mail')}${t('email')}</a>
+        <a href="tel:+40771147147">${icon('phone', 'ico--sm')}${t('phone')}</a>
+        <a href="mailto:${t('email')}">${icon('mail', 'ico--sm')}${t('email')}</a>
       </div>
     </div>
   </div>
   <div class="toast" role="status" aria-live="polite" data-toast></div>`;
+}
+
+/* header behaviour: scrolled state, menu panels (hover on desktop, click/keyboard everywhere), search panel, phone menu */
+function bindHeader() {
+  const hdr = qs('[data-header]'); if (!hdr) return;
+  const onScroll = () => hdr.classList.toggle('is-scrolled', scrollY > 24);
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  const btns = qsa('[data-mm]', hdr), sBtn = qs('[data-open-search]', hdr), sPanel = qs('#hsearch', hdr);
+  let openId = null, timer;
+  const closeAll = (focusBack) => {
+    if (openId) { const b = qs(`[data-mm="${openId}"]`, hdr); b.setAttribute('aria-expanded', 'false'); qs('#mm-' + openId).hidden = true; if (focusBack) b.focus(); openId = null; }
+    if (!sPanel.hidden) { sPanel.hidden = true; sBtn.setAttribute('aria-expanded', 'false'); hdr.classList.remove('is-search'); if (focusBack) sBtn.focus(); }
+  };
+  const openMM = id => { if (openId === id) return; closeAll(false); openId = id; qs(`[data-mm="${id}"]`, hdr).setAttribute('aria-expanded', 'true'); qs('#mm-' + id).hidden = false; };
+  btns.forEach(b => {
+    b.addEventListener('click', () => { clearTimeout(timer); openId === b.dataset.mm ? closeAll(false) : openMM(b.dataset.mm); });
+    b.addEventListener('pointerenter', e => { if (e.pointerType !== 'mouse') return; clearTimeout(timer); timer = setTimeout(() => openMM(b.dataset.mm), openId ? 0 : 90); });
+  });
+  hdr.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse' && openId) { clearTimeout(timer); timer = setTimeout(() => closeAll(false), 220); } });
+  hdr.addEventListener('pointerenter', () => clearTimeout(timer));
+  sBtn.addEventListener('click', () => {
+    if (!sPanel.hidden) { closeAll(false); return; }
+    closeAll(false); sPanel.hidden = false; sBtn.setAttribute('aria-expanded', 'true'); hdr.classList.add('is-search'); qs('#q', sPanel).focus();
+  });
+  document.addEventListener('pointerdown', e => { if (!hdr.contains(e.target)) closeAll(false); });
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    const d = qs('#drawer.is-open'); if (d) { qs('[data-close-drawer]', d).click(); return; }
+    if (openId || !sPanel.hidden) closeAll(true);
+  });
+  // phone menu: floating panel with a simple focus trap
+  const drawer = qs('#drawer'), mb = qs('[data-open-drawer]');
+  const openDrawer = () => { closeAll(false); drawer.hidden = false; requestAnimationFrame(() => drawer.classList.add('is-open')); mb.setAttribute('aria-expanded', 'true'); document.body.style.overflow = 'hidden'; setTimeout(() => qs('[data-close-drawer]', drawer).focus(), 60); };
+  const closeDrawer = () => { drawer.classList.remove('is-open'); document.body.style.overflow = ''; setTimeout(() => { drawer.hidden = true; }, 260); mb.setAttribute('aria-expanded', 'false'); mb.focus(); };
+  mb.addEventListener('click', openDrawer);
+  drawer.addEventListener('click', e => { if (e.target === drawer || e.target.closest('[data-close-drawer]')) closeDrawer(); else if (e.target.closest('a[href^="#"], a[href*="#"]')) { drawer.classList.remove('is-open'); document.body.style.overflow = ''; setTimeout(() => { drawer.hidden = true; }, 260); mb.setAttribute('aria-expanded', 'false'); } });
+  drawer.addEventListener('keydown', e => {
+    if (e.key !== 'Tab') return;
+    const f = qsa('a[href],button', drawer).filter(x => x.offsetParent !== null); const a = f[0], z = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === a) { e.preventDefault(); z.focus(); } else if (!e.shiftKey && document.activeElement === z) { e.preventDefault(); a.focus(); }
+  });
 }
 
 function searchBox() {
@@ -583,7 +670,7 @@ function handleAdd(id, qty = 1, opener) {
   toast(`${t('toastAdded')}. ${t('total')}: ${money(cartTotal())}`);
   if (opener) { opener.animate([{ transform: 'scale(1)' }, { transform: 'scale(.85)' }, { transform: 'scale(1)' }], { duration: 260 }); }
 }
-function refreshGarage() { const g = qs('[data-garage]'); if (g) g.innerHTML = garageChip(); }
+function refreshGarage() { const g = qs('[data-garage]'); if (g) g.innerHTML = garageChip(); qsa('.mm__car').forEach(el => { el.innerHTML = mmCar(el.closest('#mm-bulbs') ? 'bulbs' : 'wipers'); }); const dc = qs('.drawer__car'); if (dc) dc.innerHTML = mmCar('wipers'); }
 
 /* ======================================================================
    PAGES
@@ -1129,6 +1216,7 @@ const app = qs('#app');
 app.innerHTML = header() + `<main id="main" tabindex="-1">${render()}</main>` + footer();
 bind();
 bindSearch();
+bindHeader();
 updateCartUI();
 
 // global delegation: wishlist, add-to-cart, garage clear, drawer
@@ -1138,9 +1226,5 @@ document.addEventListener('click', e => {
   const add = e.target.closest('[data-add]');
   if (add) { handleAdd(+add.dataset.add, 1, add); return; }
   if (e.target.closest('[data-cleargarage]')) { saveGarage(null); refreshGarage(); return; }
-  const od = e.target.closest('[data-open-drawer]');
-  if (od) { const d = qs('#drawer'); d.hidden = false; requestAnimationFrame(() => d.classList.add('is-open')); od.setAttribute('aria-expanded', 'true'); setTimeout(() => qs('[data-close-drawer]', d).focus(), 50); return; }
-  if (e.target.closest('[data-close-drawer]') || e.target.id === 'drawer') { const d = qs('#drawer'); d.classList.remove('is-open'); setTimeout(() => { d.hidden = true; }, 300); const b = qs('[data-open-drawer]'); b.setAttribute('aria-expanded', 'false'); b.focus(); }
 });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { const d = qs('#drawer.is-open'); if (d) { qs('[data-close-drawer]', d).click(); } } });
 })();
