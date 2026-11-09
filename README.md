@@ -3,7 +3,9 @@
 Clickable HTML prototype for the redesign of **redesign.bonbila.ro** (WordPress + Elementor + WooCommerce).
 It keeps Bonbila's logo, layout and backend components. Only the design of those elements changes, plus some proposed improvements.
 
-**Round 2 (day & night):** light "day" sections for shopping, alternating with "night" sections in Bonbila navy: header, hero, the lighting section, parts on request, footer and the order summary. Small details carry the brand: the yellow dot from the logo marks the current or selected item, wiper lengths are drawn as dimension lines, bulbs show their socket and light colour (Kelvin), and the add button is a small yellow disc with "+".
+**Round 2 (day & night):** light "day" sections for shopping, alternating with "night" sections in Bonbila navy: header, the lighting section, parts on request, footer and the order summary. Small details carry the brand: the yellow dot from the logo marks the current or selected item, wiper lengths are drawn as dimension lines, bulbs show their socket and light colour (Kelvin), and the add button is a small yellow disc with "+".
+
+**Homepage hero:** back to the light round 1 layout (Paul preferred it): eyebrow, headline with the yellow marker, the white vehicle finder on the left, and the night headlight photo as a rounded card on the right with two badges and three stats. On phones the photo card is hidden so the finder stays at the top.
 
 **Floating menu:** the header is a dark capsule that floats above the page and stays on top while scrolling. On desktop, "Becuri auto" and "Ștergătoare" open floating menu panels (by socket, technology, brand, maker, and the saved car), and search opens as a floating panel with frequent searches. On phones, the menu opens as a floating night card with the two categories, the saved car, sockets and links, and the bottom bars (Filters/Sort, Add to cart, Checkout) float as capsules too. In Elementor this maps to a sticky header with a Mega Menu widget; the panels use the same night colours as the header.
 
@@ -45,7 +47,7 @@ Every other make or model still works and falls back to "all generations".
 | Name | Hex | Use |
 |---|---|---|
 | Primary (Bonbila yellow) | `#FFC20E` | main buttons, the yellow dot; text on it is always Night |
-| Night | `#0E1422` | header, hero, night sections, footer, order summary; also the text colour on day sections |
+| Night | `#0E1422` | header, night sections, footer, order summary, hero photo card; also the text colour on day sections |
 | Night panel | `#161C2C` | panels on night (vehicle finder) |
 | Day | `#EDEFF1` | page background (cool grey) |
 | Surface | `#FFFFFF` | tiles, product photo tiles (photos use `mix-blend-mode:multiply`) |

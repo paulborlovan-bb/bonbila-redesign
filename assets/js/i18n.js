@@ -12,7 +12,7 @@ ro: {
   navBulbs: 'Becuri auto', navWipers: 'Ștergătoare', navParts: 'Piese la cerere', navGuides: 'Ghiduri', navContact: 'Contact',
   myCar: 'Mașina mea', chooseCar: 'Alege mașina', removeCar: 'Șterge mașina salvată', changeCar: 'Schimbă mașina',
   // hero / finder
-  heroTitle: 'Becuri și ștergătoare care se potrivesc mașinii tale',
+  heroTitle: 'Găsește produsele potrivite <em>mașinii tale</em>',
   lightTitle: 'Lumina potrivită, de la halogen la LED', lightLead: 'Alege după soclu și după culoarea luminii. Cu cât temperatura de culoare e mai mare, cu atât lumina e mai albă.', lightAll: 'Toate becurile',
   kAria: 'Temperatura de culoare: halogen în jur de 3200 K, xenon în jur de 4300 K, LED în jur de 6000 K', kWarm: 'alb cald', kNeutral: 'alb neutru', kCool: 'alb rece', bySocket: 'Caută după soclu',
   wipRailTitle: 'Ștergătoare potrivite la milimetru', wipRailLead: 'Lungimea pentru șofer și pentru pasager, verificate pe generația mașinii tale.', wipAll: 'Toate ștergătoarele',
@@ -145,7 +145,7 @@ de: {
   account: 'Mein Konto', login: 'Anmelden', cart: 'Warenkorb', menu: 'Menü', close: 'Schließen', favorites: 'Merkliste',
   navBulbs: 'Autolampen', navWipers: 'Scheibenwischer', navParts: 'Teile auf Anfrage', navGuides: 'Ratgeber', navContact: 'Kontakt',
   myCar: 'Mein Fahrzeug', chooseCar: 'Fahrzeug wählen', removeCar: 'Gespeichertes Fahrzeug entfernen', changeCar: 'Fahrzeug ändern',
-  heroTitle: 'Lampen und Wischer, die zu Ihrem Auto passen',
+  heroTitle: 'Die passenden Teile für <em>Ihr Auto</em>',
   lightTitle: 'Das passende Licht, von Halogen bis LED', lightLead: 'Wählen Sie nach Sockel und Lichtfarbe. Je höher die Farbtemperatur, desto weißer das Licht.', lightAll: 'Alle Lampen',
   kAria: 'Farbtemperatur: Halogen um 3200 K, Xenon um 4300 K, LED um 6000 K', kWarm: 'warmweiß', kNeutral: 'neutralweiß', kCool: 'kaltweiß', bySocket: 'Nach Sockel suchen',
   wipRailTitle: 'Wischer, auf den Millimeter passend', wipRailLead: 'Längen für Fahrer- und Beifahrerseite, geprüft für die Generation Ihres Autos.', wipAll: 'Alle Wischer',

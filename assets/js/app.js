@@ -688,18 +688,18 @@ function pageHome() {
   const ticks = [[3200, 'Halogen', 'kWarm'], [4300, 'Xenon', 'kNeutral'], [6000, 'LED', 'kCool']];
   const sockets = [['H7', 'bulb'], ['H4', 'bulb'], ['H1', 'bulb'], ['H11', 'bulb'], ['W5W', 'bulb'], ['LED', 'tech']];
   return `
-  <section class="hero is-night" aria-labelledby="hero-h"><div class="wrap">
-    <div class="hero__grid">
-      <div class="hero__copy">
-        <h1 id="hero-h">${t('heroTitle')}<i class="hdot" aria-hidden="true"></i></h1>
-        <p class="hero__lead">${t('heroLead')}</p>
-        ${finderHome()}
-      </div>
-      <div class="hero__media" aria-hidden="true">
-        <picture><source media="(min-width:1400px)" srcset="${img('hero-night-car.webp')}"><img src="${img('hero-night-car-800.webp')}" srcset="${img('hero-night-car-800.webp')} 800w, ${img('hero-night-car.webp')} 1600w" sizes="(min-width:1000px) 56vw, 100vw" alt="" width="1600" height="1067" fetchpriority="high"></picture>
-      </div>
+  <section class="hero" aria-labelledby="hero-h"><div class="wrap hero__grid">
+    <div class="hero__copy">
+      <span class="eyebrow">Bonbila Auto</span>
+      <h1 id="hero-h">${t('heroTitle')}</h1>
+      <p class="hero__lead">${t('heroLead')}</p>
+      ${finderHome()}
     </div>
-    <div class="facts"><div><b>1.400+</b><span>${t('statWipers')}</span></div><div><b>${D.brands.length}</b><span>${t('statBrands')}</span></div><div><b>14</b><span>${t('statReturn')}</span></div></div>
+    <div class="hero__media">
+      <picture aria-hidden="true"><source media="(min-width:1400px)" srcset="${img('hero-night-car.webp')}"><img src="${img('hero-night-car-800.webp')}" srcset="${img('hero-night-car-800.webp')} 800w, ${img('hero-night-car.webp')} 1600w" sizes="(min-width:1000px) 46vw, 100vw" alt="" width="1600" height="1067" fetchpriority="high"></picture>
+      <div class="hero__float"><span class="badge">${icon('check', 'ico--sm')}${t('floatFit')}</span><span class="badge">${icon('shield', 'ico--sm')}${t('floatLed')}</span></div>
+      <div class="hero__stats"><div class="stat"><b>1.400+</b><span>${t('statWipers')}</span></div><div class="stat"><b>${D.brands.length}</b><span>${t('statBrands')}</span></div><div class="stat"><b>14</b><span>${t('statReturn')}</span></div></div>
+    </div>
   </div></section>
 
   <section class="section" aria-labelledby="cats-h"><div class="wrap">
