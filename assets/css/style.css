@@ -459,15 +459,16 @@ textarea.input{min-height:110px;padding:14px 16px;resize:vertical}
 .cats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 @media (min-width:900px){.cats{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}}
 .cat{position:relative;display:flex;flex-direction:column;background:var(--surface);border-radius:var(--r-md);overflow:hidden;text-decoration:none;color:inherit;min-width:0}
-.cat__img{display:grid;place-items:center;aspect-ratio:4/3;padding:10px}
-.cat__img img{width:84%;height:auto;object-fit:contain;filter:drop-shadow(0 14px 14px rgba(14,20,34,.12));transition:transform .4s var(--ease)}
-.cat:hover .cat__img img{transform:scale(1.04)}
-.cat__body{padding:2px 16px 16px;display:block}
-.cat__body h3{font-size:19px;letter-spacing:-.015em}
-.cat__body small{display:block;color:var(--ink-3);font:400 15px/1.35 var(--f-body);margin-top:6px}
-.cat__count{position:absolute;top:12px;left:14px;font:600 13.5px/1 var(--f-data);color:var(--ink-3)}
+/* one fixed stage for every photo: titles line up whatever the photo's shape */
+.cat__img{--pi:28px;--pt:30px;--pb:18px;position:relative;display:block;aspect-ratio:5/4}
+.cat__img img{position:absolute;left:var(--pi);top:var(--pt);width:calc(100% - var(--pi) * 2);height:calc(100% - var(--pt) - var(--pb));object-fit:contain;transform:scale(var(--k,1));filter:drop-shadow(0 14px 14px rgba(14,20,34,.12));transition:transform .4s var(--ease)}
+.cat:hover .cat__img img{transform:scale(calc(var(--k,1) * 1.04))}
+.cat__body{display:block;padding:6px 24px 24px}
+.cat__body h3{font-size:22px;letter-spacing:-.02em}
+.cat__body small{display:block;color:var(--ink-3);font:400 16px/1.4 var(--f-body);margin-top:6px;max-width:30ch}
 .cat:hover h3{text-decoration:underline;text-decoration-color:var(--brand);text-decoration-thickness:2px;text-underline-offset:4px}
-@media (max-width:639px){.cat__body{padding:0 12px 12px}.cat__body h3{font-size:16.5px}.cat__body small{display:none}.cat__count{top:10px;left:10px;font-size:12.5px}}
+@media (max-width:899px){.cat__img{--pi:18px;--pt:20px;--pb:12px}.cat__body{padding:4px 16px 18px}.cat__body h3{font-size:19px}}
+@media (max-width:639px){.cat__img{--pi:12px;--pt:16px;--pb:10px}.cat__body{padding:2px 12px 14px}.cat__body h3{font-size:16.5px}.cat__body small{display:none}}
 
 /* ---------- steps: a thin line with dots ---------- */
 .steps{display:grid}

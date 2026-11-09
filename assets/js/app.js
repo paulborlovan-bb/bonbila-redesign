@@ -675,6 +675,8 @@ function refreshGarage() { const g = qs('[data-garage]'); if (g) g.innerHTML = g
 /* ======================================================================
    PAGES
    ====================================================================== */
+// category photos: real pixel size + a scale so all four objects read at the same visual size
+const CAT_IMG = { 'stergatoare-auto-v1': [720, 480, .94], 'bec-halogen-h7-v1': [720, 1080, 1.1], 'bec-led-h7-v1': [720, 1080, 1.1], 'disc-frana-etrier-v1': [720, 720, .88] };
 function pageHome() {
   const bulbs = [47, 56, 48, 59].map(byId).filter(Boolean);
   const wipers = [2172, 1381, 1554, 1478].map(byId).filter(Boolean);
@@ -704,8 +706,8 @@ function pageHome() {
 
   <section class="section" aria-labelledby="cats-h"><div class="wrap">
     <div class="shead"><div><h2 id="cats-h">${t('catsTitle')}</h2><p>${t('catsLead')}</p></div></div>
-    <div class="cats">${cats.map(([h, d, im, href, cnt]) => `<a class="cat" href="${href}">${cnt ? `<span class="cat__count">${cnt}${cnt === t('request') ? '' : (LANG === 'ro' ? ' de ' : ' ') + t('products')}</span>` : ''}
-      <span class="cat__img"><img src="${img('cat/' + im + '.webp')}" alt="" width="720" height="480" loading="lazy"></span>
+    <div class="cats">${cats.map(([h, d, im, href]) => `<a class="cat" href="${href}">
+      <span class="cat__img"><img src="${img('cat/' + im + '.webp')}" alt="" width="${CAT_IMG[im][0]}" height="${CAT_IMG[im][1]}" loading="lazy" style="--k:${CAT_IMG[im][2]}"></span>
       <span class="cat__body"><h3>${t(h)}</h3><small>${t(d)}</small></span></a>`).join('')}</div>
   </div></section>
 
