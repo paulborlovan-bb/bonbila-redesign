@@ -43,14 +43,14 @@ const shell = (p, lang) => {
 <title>${title}</title>
 <meta name="description" content="${desc}">
 <meta name="robots" content="noindex, nofollow">
-<meta name="theme-color" content="#FFFFFF">
+<meta name="theme-color" content="#0E1422">
 <meta name="format-detection" content="telephone=no">
 <link rel="alternate" hreflang="ro" href="${BASE}${p.file}">
 <link rel="alternate" hreflang="de" href="${BASE}de/${p.file}">
 <link rel="icon" type="image/png" href="${r}assets/img/favicon.png">
 <link rel="apple-touch-icon" href="${r}assets/img/apple-touch-icon.png">
 <link rel="preload" href="${r}assets/fonts/outfit-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="${r}assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="${r}assets/fonts/barlow-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="${r}assets/css/style.css">
 <script src="${r}assets/js/data.js" defer></script>
 <script src="${r}assets/js/i18n.js" defer></script>

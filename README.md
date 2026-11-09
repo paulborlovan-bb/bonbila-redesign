@@ -1,7 +1,9 @@
-# Bonbila Auto – redesign prototype (light)
+# Bonbila Auto – redesign prototype (light, with night sections)
 
 Clickable HTML prototype for the redesign of **redesign.bonbila.ro** (WordPress + Elementor + WooCommerce).
 It keeps Bonbila's logo, layout and backend components. Only the design of those elements changes, plus some proposed improvements.
+
+**Round 2 (day & night):** light "day" sections for shopping, alternating with "night" sections in Bonbila navy: header, hero, the lighting section, parts on request, footer and the order summary. Small details carry the brand: the yellow dot from the logo marks the current or selected item, wiper lengths are drawn as dimension lines, bulbs show their socket and light colour (Kelvin), and the add button is a small yellow disc with "+".
 
 **Live:** https://paulborlovan-bb.github.io/bonbila-redesign/ · German: https://paulborlovan-bb.github.io/bonbila-redesign/de/
 
@@ -40,18 +42,26 @@ Every other make or model still works and falls back to "all generations".
 
 | Name | Hex | Use |
 |---|---|---|
-| Primary (Bonbila yellow) | `#FFC20E` | buttons, highlights; text on it is always Ink |
-| Ink | `#111318` | text, dark buttons |
-| Navy | `#101623` | top bar, VIN request block |
-| Page | `#F2F2EF` | page background |
-| Surface | `#FFFFFF` | cards |
-| Tile | `#F3F3F0` | product photo background (photos use `mix-blend-mode:multiply`) |
-| Text secondary | `#474C55` / `#656B75` | body / meta (both pass WCAG AA on white) |
-| Line | `#E3E3DE` | borders |
-| Success / Warning / Error | `#137A3A` / `#8F5300` / `#B42323` | stock, fit check, errors |
+| Primary (Bonbila yellow) | `#FFC20E` | main buttons, the yellow dot; text on it is always Night |
+| Night | `#0E1422` | header, hero, night sections, footer, order summary; also the text colour on day sections |
+| Night panel | `#161C2C` | panels on night (vehicle finder) |
+| Day | `#EDEFF1` | page background (cool grey) |
+| Surface | `#FFFFFF` | tiles, product photo tiles (photos use `mix-blend-mode:multiply`) |
+| Text secondary (day) | `#434B5A` / `#5B6372` | body / meta (8.4:1 and 6.0:1 on white) |
+| Text secondary (night) | `#BAC1CD` / `#8E97A7` | body / meta on Night (10:1 and 6.1:1) |
+| Lines | `#DCE0E5` / `#C3C9D1` on day, white at 12 % / 24 % on night | hairlines |
+| Success / Warning / Error | `#137A3A` / `#8F5300` / `#B42323` on day, `#6FD49A` / `#F5B85A` / `#FF8A7E` on night | stock, fit check, errors |
 
-**Global fonts:** Outfit (headings, prices) and Inter (body). Both are self-hosted woff2 with Romanian diacritics (latin-ext); no Google Fonts request, which is GDPR friendly.
-**Radii:** 32 / 24 / 18 / 12 px, pills 999 px. **Container:** 1320 px.
+**Global fonts** (all self-hosted woff2 with Romanian and German characters, SIL Open Font License, no Google Fonts request):
+- **Outfit** for headings and prices. Its round letters match the logo.
+- **Barlow** 400/500/600 for body text. It was drawn after road signs and number plates.
+- **Barlow Semi Condensed** 500/600 for codes, specs, sizes and small labels.
+
+**Radii by hierarchy:** 24 big containers, 20 panels, 14 tiles and cards, 10 small tiles, 6 labels, pills for buttons. Shadows only on popovers and dialogs. **Container:** 1320 px.
+
+**Logo on dark:** `assets/img/bonbila-logo-negative.png` is made from their PNG (white letters, black "b" kept inside the yellow disc). Please ask Bonbila for an official negative logo (SVG) before the build.
+
+**One motion moment:** the headlight photo in the hero switches on once when the page loads ("lights on"). It is off when the visitor has reduced motion turned on.
 
 ## Mobile and accessibility
 

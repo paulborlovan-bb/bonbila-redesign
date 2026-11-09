@@ -156,7 +156,7 @@ function header() {
   </div></div>
   <header class="header">
     <div class="wrap header__row">
-      <a class="logo" href="index.html"><img src="${img('bonbila-logo.png')}" alt="Bonbila Auto – ${t('home')}" width="149" height="44"></a>
+      <a class="logo" href="index.html"><img src="${img('bonbila-logo-negative.png')}" alt="Bonbila Auto – ${t('home')}" width="149" height="44"></a>
       <div class="header__search">${searchBox()}</div>
       <div class="header__actions">
         ${langSwitch()}
@@ -200,10 +200,10 @@ function searchBox() {
 }
 
 function footer() {
-  return `<footer class="footer" id="contact">
+  return `<footer class="footer is-night" id="contact">
     <div class="wrap footer__top">
       <div class="footer__brand">
-        <img src="${img('bonbila-logo.png')}" alt="Bonbila Auto" width="149" height="44" loading="lazy">
+        <img src="${img('bonbila-logo-negative.png')}" alt="Bonbila Auto" width="149" height="44" loading="lazy">
         <p>${t('footAbout')}</p>
         <div class="footer__contact">
           <a href="tel:+40771147147">${icon('phone')}${t('phone')}</a>
@@ -223,6 +223,34 @@ function footer() {
   </footer>`;
 }
 
+/* ---------- product details: wiper lengths as dimension lines, bulbs as socket + light colour ---------- */
+const kColor = k => k < 3600 ? '#FFC46B' : k < 4600 ? '#FFE9C4' : k < 5600 ? '#F1F3F8' : '#D3E1FF';
+const kPos = k => Math.max(0, Math.min(100, (k - 2700) / 40)) + '%';   // scale runs 2700 K → 6700 K
+const kName = k => t(k < 4000 ? 'kWarm' : k < 5000 ? 'kNeutral' : 'kCool');
+const dimRow = (n, lab = '') => `<span class="dim" style="--k:${Math.min(1, n / 750).toFixed(3)}">${lab ? `<span>${lab}</span>` : ''}<i></i><span><b>${n}</b> mm</span></span>`;
+function pdetail(p) {
+  const A = p.attrs;
+  if (p.type === 'wipers') {
+    const a = parseInt(A.len1), b = parseInt(A.len2);
+    if (!a) return '';
+    return `<span class="dims" role="img" aria-label="${esc(t('lensAria', { a: A.len1, b: A.len2 || '–' }))}">${dimRow(a)}${b ? dimRow(b) : ''}</span>`;
+  }
+  const k = parseInt(A.kelvin);
+  return `<span class="pmeta">${A.bulb ? `<span class="sock">${esc(A.bulb)}</span>` : ''}${k ? `<span class="kel" style="--kc:${kColor(k)}">${k}K</span>` : ''}${A.watt ? `<span>${esc(A.watt)}</span>` : ''}</span>`;
+}
+function pgfx(p) {
+  const A = p.attrs;
+  if (p.type === 'wipers') {
+    const a = parseInt(A.len1), b = parseInt(A.len2);
+    if (!a) return '';
+    return `<div class="pgfx"><span class="dims" role="img" aria-label="${esc(t('lensAria', { a: A.len1, b: A.len2 || '–' }))}">${dimRow(a, t('dimDriver'))}${b ? dimRow(b, t('dimPass')) : ''}</span></div>`;
+  }
+  const k = parseInt(A.kelvin);
+  return `<div class="pgfx"><div class="pgfx__row"><span class="sock">${esc(A.bulb || '')}</span>
+    ${k ? `<div class="pgfx__k" role="img" aria-label="${esc(t('spKelvin') + ': ' + k + ' K, ' + kName(k))}"><div class="kscale__bar"><i style="--x:${kPos(k)};--kc:${kColor(k)}"></i></div><p><b>${k}K</b><span>${kName(k)}</span></p></div>`
+        : `<div class="pgfx__k"><p><b>${esc(A.tech || '')}</b><span>${esc([A.watt, A.volt].filter(Boolean).join(', '))}</span></p></div>`}</div></div>`;
+}
+
 /* ---------- product card ---------- */
 function card(p, opt = {}) {
   const c = opt.car;
@@ -237,13 +265,14 @@ function card(p, opt = {}) {
     <div class="pcard__body">
       <span class="pcard__brand">${esc(p.brand)}</span>
       <a class="pcard__name" href="${link('produs.html', { id: p.id })}">${nm}</a>
+      ${pdetail(p)}
       <span class="pcard__sku">${t('code')}: ${esc(p.sku)}</span>
       ${fit}
       <span class="stock stock--${p.stock}">${t('st_' + p.stock)}</span>
       <div class="pcard__foot">
         <span class="price${sale ? ' price--sale' : ''}">${sale ? `<del><span class="sr-only">${LANG === 'de' ? 'Alter Preis' : 'Preț inițial'}: </span>${money(p.reg)}</del>` : ''}${priceHTML(p.price)}</span>
-        ${out ? `<a class="addbtn addbtn--ghost" href="${link('produs.html', { id: p.id })}" aria-label="${t('view')}: ${nm}">${icon('arrow')}</a>`
-              : `<button class="addbtn" type="button" data-add="${p.id}" aria-label="${t('add')}: ${nm}">${icon('cart')}</button>`}
+        ${out ? `<a class="addbtn addbtn--ghost" href="${link('produs.html', { id: p.id })}" aria-label="${t('view')}: ${nm}">${icon('right')}</a>`
+              : `<button class="addbtn" type="button" data-add="${p.id}" aria-label="${t('add')}: ${nm}">${icon('plus')}</button>`}
       </div>
     </div>
   </article>`;
@@ -282,7 +311,7 @@ function finderHome() {
           <div class="selwrap" data-modelwrap><select class="select" id="hf-model" name="vehicle_model" disabled aria-describedby="hf-err">${modelOptions('', type)}</select></div></div>
       </div>
     </div>
-    <button class="btn btn--primary btn--lg btn--block" type="button" data-go>${t('pickCar')} ${icon('arrow')}</button>
+    <button class="btn btn--primary btn--lg btn--block" type="button" data-go>${t('pickCar')}</button>
     <p class="ferr finder__err" id="hf-err" role="alert" hidden>${t('needBrandModel')}</p>
     ${garage ? `<div class="lastcar">${logo(garage.make)}<div><small>${t('lastCar')}</small><b>${esc(carLabel(garage))}</b> <span class="muted">${esc(carYears(garage))}</span></div>
       <a class="btn btn--dark btn--sm" href="${link('categorie.html', { vehicle_type: garage.type || 'wipers', vehicle_make: garage.make, vehicle_model: garage.model, vehicle_generation: garage.slug })}">${t('seeProducts')}</a></div>` : ''}
@@ -393,7 +422,7 @@ function bindSearch() {
     }).join('') + '</div>';
     if (prods.length) html += `<div role="group" aria-label="${t('sProducts')}"><h3 aria-hidden="true">${t('sProducts')}</h3>` + prods.map(p => `<a role="option" id="sg${n++}" href="${link('produs.html', { id: p.id })}" aria-selected="false"><span class="s-thumb"><img src="${img(p.imgs[0])}" alt="" width="44" height="44" loading="lazy"></span><span class="s-main"><b>${hl(pname(p), q)}</b><small>${t('code')}: ${esc(p.sku)}</small></span><span class="s-price">${money(p.price)}</span></a>`).join('') + '</div>';
     if (!html) html = `<p class="s-empty">${esc(t('sNone', { q: raw }))}</p>`;
-    html += `<a role="option" id="sg${n++}" class="s-all" href="${link('categorie.html', { q: raw })}" aria-selected="false">${esc(t('sAll', { q: raw }))} ${icon('arrow', 'ico--sm')}</a>`;
+    html += `<a role="option" id="sg${n++}" class="s-all" href="${link('categorie.html', { q: raw })}" aria-selected="false">${esc(t('sAll', { q: raw }))}</a>`;
     box.innerHTML = html; box.hidden = false; inp.setAttribute('aria-expanded', 'true'); active = -1; inp.removeAttribute('aria-activedescendant');
   };
   inp.addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(run, 90); });
@@ -458,7 +487,7 @@ function confirmVehicle(p, { qty = 1, editKey = null } = {}) {
       <button class="iconbtn iconbtn--line" type="button" data-x aria-label="${t('close')}">${icon('close')}</button></div>
     <form class="bbvc-form" novalidate>
       <div class="modal__body">
-        <div class="modal__product"><span class="s-thumb"><img src="${img(p.imgs[0])}" alt="" width="56" height="56"></span><div><b>${esc(pname(p))}</b><small>${t('code')}: ${esc(p.sku)}${qty > 1 ? ` · ${qty} ${t('piece')}` : ''}</small></div></div>
+        <div class="modal__product"><span class="s-thumb"><img src="${img(p.imgs[0])}" alt="" width="56" height="56"></span><div><b>${esc(pname(p))}</b><small>${t('code')}: ${esc(p.sku)}${qty > 1 ? `, ${qty} ${t('piece')}` : ''}</small></div></div>
         <div class="grid2">
           <div class="field"><label for="cf-make">${t('cfMake')} <span class="req" aria-hidden="true">*</span></label>
             <div class="selwrap" data-lw>${c.make ? logo(c.make) : ''}<select class="select" id="cf-make" required aria-describedby="cf-make-e"><option value="">${t('cfChooseMake')}</option>${makes.map(m => `<option ${m === c.make ? 'selected' : ''}>${esc(m)}</option>`).join('')}</select></div>
@@ -539,8 +568,8 @@ function confirmVehicle(p, { qty = 1, editKey = null } = {}) {
       if (editKey) { const l = cart.find(x => x.key === editKey); if (l) l.car = car; saveCart(); closeModal(); toast(t('cfSaved')); if (PAGE === 'cart') renderCart(); refreshGarage(); return; }
       addToCart(p, qty, car); refreshGarage();
       panel.innerHTML = `<div class="success"><span class="success__ico">${icon('check')}</span><h2 id="modal-title" tabindex="-1">${t('cfAdded')}</h2>
-        <span class="carline">${logo(car.make)}${esc(carLabel(car))} · ${car.year}</span><p>${t('cfAddedD')}</p></div>
-        <div class="modal__foot" style="position:static"><a class="btn btn--primary btn--lg btn--block" href="cos.html">${t('cfViewCart')} ${icon('arrow')}</a><button class="btn btn--ghost btn--block" type="button" data-x>${t('cfContinue')}</button></div>`;
+        <span class="carline">${logo(car.make)}${esc(carLabel(car))}, ${car.year}</span><p>${t('cfAddedD')}</p></div>
+        <div class="modal__foot" style="position:static"><a class="btn btn--primary btn--lg btn--block" href="cos.html">${t('cfViewCart')}</a><button class="btn btn--ghost btn--block" type="button" data-x>${t('cfContinue')}</button></div>`;
       qs('[data-x]', panel).addEventListener('click', closeModal); qs('#modal-title', panel).focus();
     });
     setTimeout(() => (f('make').value ? (f('year').value ? qs('button[type=submit]', panel) : f('year').disabled ? f('model') : f('year')) : f('make')).focus(), 60);
@@ -551,7 +580,7 @@ function handleAdd(id, qty = 1, opener) {
   const p = byId(id); if (!p) return;
   if (p.type === 'wipers') { confirmVehicle(p, { qty }); return; }
   addToCart(p, qty, garage ? { ...garage, year: undefined } : null);
-  toast(`${t('toastAdded')} · ${money(cartTotal())}`);
+  toast(`${t('toastAdded')}. ${t('total')}: ${money(cartTotal())}`);
   if (opener) { opener.animate([{ transform: 'scale(1)' }, { transform: 'scale(.85)' }, { transform: 'scale(1)' }], { duration: 260 }); }
 }
 function refreshGarage() { const g = qs('[data-garage]'); if (g) g.innerHTML = garageChip(); }
@@ -560,7 +589,8 @@ function refreshGarage() { const g = qs('[data-garage]'); if (g) g.innerHTML = g
    PAGES
    ====================================================================== */
 function pageHome() {
-  const pop = [2172, 47, 1554, 56, 1282, 59, 12342 && 53, 1571].map(byId).filter(Boolean).slice(0, 8);
+  const bulbs = [47, 56, 48, 59].map(byId).filter(Boolean);
+  const wipers = [2172, 1381, 1554, 1478].map(byId).filter(Boolean);
   const brandWall = D.popular.slice(0, 16);
   const cats = [
     ['catWipers', 'catWipersD', 'stergatoare-auto-v1', link('categorie.html', { vehicle_type: 'wipers' }), '1.400+'],
@@ -568,64 +598,74 @@ function pageHome() {
     ['catLed', 'catLedD', 'bec-led-h7-v1', link('categorie.html', { vehicle_type: 'bulbs', tech: 'LED' }), ''],
     ['catParts', 'catPartsD', 'disc-frana-etrier-v1', '#request', t('request')],
   ];
+  const ticks = [[3200, 'Halogen', 'kWarm'], [4300, 'Xenon', 'kNeutral'], [6000, 'LED', 'kCool']];
+  const sockets = [['H7', 'bulb'], ['H4', 'bulb'], ['H1', 'bulb'], ['H11', 'bulb'], ['W5W', 'bulb'], ['LED', 'tech']];
   return `
-  <section class="hero"><div class="wrap hero__grid">
-    <div>
-      <span class="eyebrow">Bonbila Auto</span>
-      <h1 class="mt16">${t('heroTitle')}</h1>
-      <p class="hero__lead">${t('heroLead')}</p>
-      ${finderHome()}
+  <section class="hero is-night" aria-labelledby="hero-h"><div class="wrap">
+    <div class="hero__grid">
+      <div class="hero__copy">
+        <h1 id="hero-h">${t('heroTitle')}<i class="hdot" aria-hidden="true"></i></h1>
+        <p class="hero__lead">${t('heroLead')}</p>
+        ${finderHome()}
+      </div>
+      <div class="hero__media" aria-hidden="true">
+        <picture><source media="(min-width:1400px)" srcset="${img('hero-night-car.webp')}"><img src="${img('hero-night-car-800.webp')}" srcset="${img('hero-night-car-800.webp')} 800w, ${img('hero-night-car.webp')} 1600w" sizes="(min-width:1000px) 56vw, 100vw" alt="" width="1600" height="1067" fetchpriority="high"></picture>
+      </div>
     </div>
-    <div class="hero__media" aria-hidden="true">
-      <picture><source media="(min-width:1400px)" srcset="${img('hero-night-car.webp')}"><img src="${img('hero-night-car-800.webp')}" srcset="${img('hero-night-car-800.webp')} 800w, ${img('hero-night-car.webp')} 1600w" sizes="(min-width:1000px) 48vw, 100vw" alt="" width="1600" height="1067" fetchpriority="high"></picture>
-      <div class="hero__float"><span class="badge">${icon('check', 'ico--sm')}${t('floatFit')}</span><span class="badge">${icon('shield', 'ico--sm')}${t('floatLed')}</span></div>
-      <div class="hero__stats"><div class="stat"><b>1.400+</b><span>${t('statWipers')}</span></div><div class="stat"><b>${D.brands.length}</b><span>${t('statBrands')}</span></div><div class="stat"><b>14</b><span>${t('statReturn')}</span></div></div>
-    </div>
+    <div class="facts"><div><b>1.400+</b><span>${t('statWipers')}</span></div><div><b>${D.brands.length}</b><span>${t('statBrands')}</span></div><div><b>14</b><span>${t('statReturn')}</span></div></div>
   </div></section>
 
-  <section class="section section--tight" aria-labelledby="cats-h"><div class="wrap">
+  <section class="section" aria-labelledby="cats-h"><div class="wrap">
     <div class="shead"><div><h2 id="cats-h">${t('catsTitle')}</h2><p>${t('catsLead')}</p></div></div>
     <div class="cats">${cats.map(([h, d, im, href, cnt]) => `<a class="cat" href="${href}">${cnt ? `<span class="cat__count">${cnt}${cnt === t('request') ? '' : (LANG === 'ro' ? ' de ' : ' ') + t('products')}</span>` : ''}
       <span class="cat__img"><img src="${img('cat/' + im + '.webp')}" alt="" width="720" height="480" loading="lazy"></span>
-      <span class="cat__body"><span><h3>${t(h)}</h3><small>${t(d)}</small></span><span class="cat__go">${icon('arrow')}</span></span></a>`).join('')}</div>
+      <span class="cat__body"><h3>${t(h)}</h3><small>${t(d)}</small></span></a>`).join('')}</div>
   </div></section>
 
-  <section class="section section--tight" aria-labelledby="how-h"><div class="wrap">
-    <div class="shead"><div><span class="eyebrow">${t('howEyebrow')}</span><h2 id="how-h">${t('howTitle')}</h2></div></div>
+  <section class="section section--tight" aria-labelledby="how-h" style="padding-top:0"><div class="wrap">
+    <div class="shead"><h2 id="how-h">${t('howTitle')}</h2></div>
     <ol class="steps">
-      <li class="step"><span class="step__n">01<i>.</i></span><h3>${t('how1')}</h3><p>${t('how1d')}</p><span class="step__art">${['Dacia', 'Volkswagen', 'Ford'].map(m => logo(m, 'blogo--tile')).join('')}</span></li>
-      <li class="step"><span class="step__n">02<i>.</i></span><h3>${t('how2')}</h3><p>${t('how2d')}</p><span class="step__art"><span class="badge">${icon('calendar', 'ico--sm')}2015</span><span class="badge">VIN</span></span></li>
-      <li class="step"><span class="step__n">03<i>.</i></span><h3>${t('how3')}</h3><p>${t('how3d')}</p><span class="step__art"><span class="badge badge--ok">${icon('check', 'ico--sm')}OK</span></span></li>
+      <li class="step"><span class="step__n" aria-hidden="true"></span><h3>${t('how1')}</h3><p>${t('how1d')}</p><span class="step__art">${['Dacia', 'Volkswagen', 'Ford'].map(m => logo(m, 'blogo--tile')).join('')}</span></li>
+      <li class="step"><span class="step__n" aria-hidden="true"></span><h3>${t('how2')}</h3><p>${t('how2d')}</p><span class="step__art"><span class="badge">${icon('calendar', 'ico--sm')}2015</span><span class="badge">VIN</span></span></li>
+      <li class="step"><span class="step__n" aria-hidden="true"></span><h3>${t('how3')}</h3><p>${t('how3d')}</p><span class="step__art"><span class="badge badge--ok">${icon('check', 'ico--sm')}OK</span></span></li>
     </ol>
   </div></section>
 
-  <section class="section section--tight" aria-labelledby="pop-h"><div class="wrap">
-    <div class="shead"><h2 id="pop-h">${t('popTitle')}</h2><a class="arrowlink" href="${link('categorie.html', { vehicle_type: 'wipers' })}">${t('popAll')} ${icon('arrow', 'ico--sm')}</a></div>
-    <div class="rail">${pop.map(p => card(p, { car: garage })).join('')}</div>
+  <section class="section is-night" aria-labelledby="light-h"><div class="wrap">
+    <div class="shead"><div><h2 id="light-h">${t('lightTitle')}</h2><p>${t('lightLead')}</p></div><a class="btn btn--ghost" href="${link('categorie.html', { vehicle_type: 'bulbs' })}">${t('lightAll')}</a></div>
+    <div class="kscale" role="img" aria-label="${t('kAria')}"><div class="kscale__bar"></div>
+      <ul class="kscale__ticks" aria-hidden="true">${ticks.map(([k, n, d]) => `<li style="--x:${kPos(k)}"><b>${k}K</b><span>${n}</span><span>${t(d)}</span></li>`).join('')}</ul></div>
+    <div class="sockets" role="group" aria-labelledby="sock-l"><span id="sock-l">${t('bySocket')}</span>${sockets.map(([v, k]) => `<a href="${link('categorie.html', { vehicle_type: 'bulbs', [k]: v })}">${v}</a>`).join('')}</div>
+    <div class="rail">${bulbs.map(p => card(p, { car: garage })).join('')}</div>
   </div></section>
 
-  <section class="section section--tight" aria-labelledby="brands-h"><div class="wrap">
-    <div class="shead"><div><span class="eyebrow">${t('brandsEyebrow')}</span><h2 id="brands-h">${t('brandsTitle')}</h2><p>${t('brandsLead')}</p></div>
-      <button class="btn btn--ghost" type="button" data-allbrands>${t('brandsAll', { n: D.brands.length })} ${icon('arrow', 'ico--sm')}</button></div>
+  <section class="section" aria-labelledby="wip-h"><div class="wrap">
+    <div class="shead"><div><h2 id="wip-h">${t('wipRailTitle')}</h2><p>${t('wipRailLead')}</p></div><a class="arrowlink" href="${link('categorie.html', { vehicle_type: 'wipers' })}">${t('wipAll')}</a></div>
+    <div class="rail">${wipers.map(p => card(p, { car: garage })).join('')}</div>
+  </div></section>
+
+  <section class="section section--tight" aria-labelledby="brands-h" style="padding-top:0"><div class="wrap">
+    <div class="shead"><div><h2 id="brands-h">${t('brandsTitle')}</h2><p>${t('brandsLead')}</p></div>
+      <button class="btn btn--ghost" type="button" data-allbrands>${t('brandsAll', { n: D.brands.length })}</button></div>
     <div class="brandwall">${brandWall.map(m => `<a href="${link('categorie.html', { vehicle_type: 'wipers', vehicle_make: m })}" aria-label="${esc(m)}">${logo(m)}<span aria-hidden="true">${esc(m === 'Mercedes-Benz' ? 'Mercedes' : m)}</span></a>`).join('')}</div>
-    <h3 class="mt32" style="font-size:20px;margin-bottom:14px">${t('makersTitle')}</h3>
+    <h3 class="subhead mt32">${t('makersTitle')}</h3>
     <div class="makers" aria-label="${t('makersTitle')}">${['BOSCH', 'OSRAM', 'PHILIPS', 'VALEO', 'HELLA', 'DENSO', 'SWF', 'TRICO', 'NEOLUX'].map(x => `<span>${x}</span>`).join('')}</div>
   </div></section>
 
-  <section class="section section--tight" id="request" aria-labelledby="req-h"><div class="wrap"><div class="request">
-    <div><span class="eyebrow">${t('reqEyebrow')}</span><h2 id="req-h" class="mt16">${t('reqTitle')}</h2><p>${t('reqLead')}</p></div>
+  <section class="section section--tight" id="guides" aria-labelledby="guides-h"><div class="wrap">
+    <div class="shead"><div><h2 id="guides-h">${t('guidesTitle')}</h2><p>${t('guidesLead')}</p></div><a class="arrowlink" href="#guides">${t('guidesAll')}</a></div>
+    <div class="guides">${[['g1', 'bec-halogen-h7-v1'], ['g2', 'stergatoare-auto-v1'], ['g3', 'bec-led-h7-v1']].map(([k, im]) => `<a class="guide" href="#guides"><span class="guide__img"><img src="${img('cat/' + im + '.webp')}" alt="" loading="lazy" width="720" height="480"></span><div><h3>${t(k)}</h3><small>${t(k + 'm')}</small></div></a>`).join('')}</div>
+    <p class="proto">${icon('info')}<span>${t('protoNote')}</span></p>
+  </div></section>
+
+  <section class="section is-night reqsec" id="request" aria-labelledby="req-h"><div class="wrap request">
+    <div><h2 id="req-h">${t('reqTitle')}</h2><p>${t('reqLead')}</p></div>
     <form data-reqform novalidate>
       <div class="field"><label for="rq-vin">${t('reqVin')}</label><input class="input" id="rq-vin" maxlength="17" autocapitalize="characters" spellcheck="false" placeholder="WF0AXXWPMAFJ48210" aria-describedby="rq-vin-h" style="text-transform:uppercase"><span class="fhelp" id="rq-vin-h">${t('reqVinHelp')}</span></div>
       <div class="row2"><div class="field"><label for="rq-part">${t('reqPart')}</label><input class="input" id="rq-part" placeholder="${t('reqPartPh')}"></div>
       <div class="field"><label for="rq-tel">${t('reqPhone')}</label><input class="input" id="rq-tel" type="tel" inputmode="tel" autocomplete="tel" placeholder="07xx xxx xxx"></div></div>
-      <button class="btn btn--primary btn--lg" type="submit">${t('reqSend')} ${icon('arrow')}</button>
+      <button class="btn btn--primary btn--lg" type="submit">${t('reqSend')}</button>
     </form>
-  </div></div></section>
-
-  <section class="section section--tight" id="guides" aria-labelledby="guides-h"><div class="wrap">
-    <div class="shead"><div><h2 id="guides-h">${t('guidesTitle')}</h2><p>${t('guidesLead')}</p></div><a class="arrowlink" href="#guides">${t('guidesAll')} ${icon('arrow', 'ico--sm')}</a></div>
-    <div class="guides">${[['g1', 'bec-halogen-h7-v1'], ['g2', 'stergatoare-auto-v1'], ['g3', 'bec-led-h7-v1']].map(([k, im]) => `<a class="guide" href="#guides"><span class="guide__img"><img src="${img('cat/' + im + '.webp')}" alt="" loading="lazy" width="720" height="480"></span><div><h3>${t(k)}</h3><small>${t(k + 'm')}</small></div></a>`).join('')}</div>
-    <p class="proto">${icon('info')}<span>${t('protoNote')}</span></p>
   </div></section>`;
 }
 function bindHome() {
@@ -834,14 +874,14 @@ function pageMasini() {
       <li><span class="n">4</span><span class="st-t">${t('stProducts')}</span></li>
     </ol>
     <div class="genhead">${logo(make)}<div><h1>${esc(t('genTitle', { car }))}</h1><p>${t('genLead')}</p></div></div>
-    ${groups.length > 1 ? `<div class="quick" role="group" aria-label="${t('cfGen')}"><button type="button" class="chip chip--plain" data-grp="" aria-pressed="true">${t('genAll')} · ${gens.length}</button>${groups.map(g => `<button type="button" class="chip chip--plain" data-grp="${esc(g)}" aria-pressed="false">${esc(g)}</button>`).join('')}</div>` : ''}
+    ${groups.length > 1 ? `<div class="quick" role="group" aria-label="${t('cfGen')}"><button type="button" class="chip chip--plain" data-grp="" aria-pressed="true">${t('genAll')} <span class="muted">${gens.length}</span></button>${groups.map(g => `<button type="button" class="chip chip--plain" data-grp="${esc(g)}" aria-pressed="false">${esc(g)}</button>`).join('')}</div>` : ''}
     ${gens ? `<div class="gens">${sorted.map((g, i) => { const n = cnt(g); const yr = year && year >= g.from && year <= (g.to || YEAR_NOW);
       return `<a class="gen" data-g="${esc(g.name.split(' - ')[0])}" href="${link('categorie.html', { vehicle_type: type, vehicle_make: make, vehicle_model: model, vehicle_generation: g.slug })}">
         ${n || yr ? `<span class="gen__count">${yr ? `<span class="badge badge--brand">${icon('calendar', 'ico--sm')}${year}</span>` : ''} ${n ? `<span class="badge badge--ok">${nprod(n)}</span>` : ''}</span>` : ''}
         <span class="gen__img"><img src="${img('gens/' + g.img)}" alt="${esc(make + ' ' + g.name)}" width="640" height="480" loading="${i < 4 ? 'eager' : 'lazy'}" decoding="async"></span>
         <span class="gen__body"><small>${esc(make)}</small><h2>${esc(g.name)}</h2><span class="gen__years" title="${esc(t('genYears', { y: yearsLabel(g.from, g.to) }))}">${icon('calendar', 'ico--sm')}${esc(yearsLabel(g.from, g.to))}</span>
-        <span class="gen__cta"><span class="btn btn--primary"><span class="l">${t('genGo')}</span><span class="s">${t('genPick')}</span>${icon('arrow', 'ico--sm')}</span></span></span></a>`; }).join('')}</div>`
-      : `<div class="empty mt16">${logo(make)}<p>${esc(t('genNoData', { car }))}</p><a class="btn btn--primary" href="${link('categorie.html', { vehicle_type: type, vehicle_make: make, vehicle_model: model })}">${esc(t('genContinue', { car }))} ${icon('arrow')}</a></div>`}
+        <span class="gen__cta"><span class="btn btn--primary"><span class="l">${t('genGo')}</span><span class="s">${t('genPick')}</span></span></span></span></a>`; }).join('')}</div>`
+      : `<div class="empty mt16">${logo(make)}<p>${esc(t('genNoData', { car }))}</p><a class="btn btn--primary" href="${link('categorie.html', { vehicle_type: type, vehicle_make: make, vehicle_model: model })}">${esc(t('genContinue', { car }))}</a></div>`}
     <div class="vinhelp">${icon('doc')}<p>${t('vinHelp')}</p><a class="btn btn--ghost btn--sm" href="index.html#request" style="margin-left:auto">${t('vinLink')}</a></div>
   </div>`;
 }
@@ -859,7 +899,7 @@ function pageProduct() {
   const sale = p.reg > p.price, pct = sale ? Math.round((1 - p.price / p.reg) * 100) : 0;
   const cat = p.type === 'bulbs' ? t('bulbsTitle') : t('wipersTitle');
   let fit;
-  if (garage && p.fits.length && fitsCar(p, garage)) fit = `<div class="fitbox fitbox--ok">${logo(garage.make)}<div><small>${icon('check', 'ico--sm')} ${t('fitOk')}</small><b>${esc(carLabel(garage))} · ${esc(carYears(garage))}</b></div><button class="btn btn--ghost btn--sm" type="button" data-pickcar>${t('changeCar')}</button></div>`;
+  if (garage && p.fits.length && fitsCar(p, garage)) fit = `<div class="fitbox fitbox--ok">${logo(garage.make)}<div><small>${icon('check', 'ico--sm')} ${t('fitOk')}</small><b>${esc(carLabel(garage))} <span class="muted">${esc(carYears(garage))}</span></b></div><button class="btn btn--ghost btn--sm" type="button" data-pickcar>${t('changeCar')}</button></div>`;
   else if (garage && p.fits.length) fit = `<div class="fitbox fitbox--warn">${logo(garage.make)}<div><small>${t('fitWarn')}</small><b>${esc(carLabel(garage))}</b></div><a class="btn btn--ghost btn--sm" href="${link('categorie.html', { vehicle_type: p.type, vehicle_make: garage.make, vehicle_model: garage.model, vehicle_generation: garage.slug })}">${t('seeProducts')}</a></div>`;
   else fit = `<div class="fitbox">${icon('car', 'ico--lg')}<div><b>${t('fitAsk')}</b><small>${t('fitAskD')}</small></div><button class="btn btn--dark btn--sm" type="button" data-pickcar>${t('check')}</button></div>`;
   const A = p.attrs;
@@ -878,8 +918,9 @@ function pageProduct() {
         ${imgs.length > 1 ? `<div class="gallery__thumbs">${imgs.map((s, i) => `<button type="button" data-thumb="${i}" aria-label="${i + 1}/${imgs.length}" ${i ? '' : 'aria-current="true"'}><img src="${img(s)}" alt="" width="72" height="72"></button>`).join('')}</div>` : ''}
       </div>
       <div class="buybox">
-        <div class="buybox__meta"><span class="pcard__brand">${esc(p.brand)}</span><span>·</span><span>${t('code')}: ${esc(p.sku)}</span></div>
+        <div class="buybox__meta"><span class="pcard__brand">${esc(p.brand)}</span><span>${t('code')}: ${esc(p.sku)}</span></div>
         <h1>${esc(pname(p))}</h1>
+        ${pgfx(p)}
         ${fit}
         ${p.fits.length ? `<div><p class="flabel" style="margin-bottom:8px">${t('fitList')}</p><div class="fitlist">${p.fits.map(f => { const g = findGen(f.make, f.model, f.gen); return `<a class="chip" href="${link('categorie.html', { vehicle_type: p.type, vehicle_make: f.make, vehicle_model: f.model, vehicle_generation: g ? g.slug : '' })}">${logo(f.make)}${esc(genShort(f.make, f.gen))}${g ? ` <span class="muted">${yearsLabel(g.from, g.to)}</span>` : ''}</a>`; }).join('')}</div></div>`
           : p.type === 'wipers' ? `<p class="notice">${icon('info')}<span>${t('fitUniversal')}</span></p>` : ''}
@@ -906,7 +947,7 @@ function pageProduct() {
     </div>
     <section class="section section--tight" aria-labelledby="rel-h"><div class="shead"><h2 id="rel-h">${t('similar')}</h2></div><div class="rail">${related.map(x => card(x, { car: garage })).join('')}</div></section>
   </div>
-  <div class="mbar mbar--m is-hidden" data-pmbar><div class="mbar__price"><small>${esc(p.brand)} · ${t('vat')}</small><b>${money(p.price)}</b></div><button class="btn btn--primary" type="button" data-buy ${p.stock === 'out' ? 'disabled' : ''}>${icon('cart')}${t('addShort')}</button></div>`;
+  <div class="mbar mbar--m is-hidden" data-pmbar><div class="mbar__price"><small>${t('vat')}</small><b>${money(p.price)}</b></div><button class="btn btn--primary" type="button" data-buy ${p.stock === 'out' ? 'disabled' : ''}>${icon('cart')}${t('addShort')}</button></div>`;
 }
 function bindProduct() {
   const p = byId(params.get('id')) || byId(2172);
@@ -929,7 +970,7 @@ function carLine(l) {
   const c = l.car;
   if (!c) return `<div class="citem__car citem__car--missing">${icon('alert', 'ico--sm')}<span>${t('noCar')}</span><button type="button" data-editcar="${esc(l.key)}">${t('addCar')}</button></div>`;
   const extra = c.vin ? `${t('vinShort')} …${esc(c.vin.slice(-6))}` : c.photo ? t('photoShort') : '';
-  return `<div class="citem__car">${logo(c.make)}<span><small>${t('forCar')}</small> <b>${esc(carLabel(c))}</b>${c.year ? ` · ${c.year}` : ''}${extra ? ` <small>· ${extra}</small>` : ''}</span><button type="button" data-editcar="${esc(l.key)}">${t('editCar')}</button></div>`;
+  return `<div class="citem__car">${logo(c.make)}<span><small>${t('forCar')}</small> <b>${esc(carLabel(c))}</b>${c.year ? `, ${c.year}` : ''}${extra ? ` <small>${extra}</small>` : ''}</span><button type="button" data-editcar="${esc(l.key)}">${t('editCar')}</button></div>`;
 }
 function shipBar(sub) {
   const left = Math.max(0, FREE_SHIP - sub), pct = Math.min(100, sub / FREE_SHIP * 100);
@@ -942,7 +983,7 @@ function pageCart() {
     <ol class="cartsteps"><li class="now"><span class="n">1</span><span class="st-t">${t('cs1')}</span></li><li><span class="n">2</span><span class="st-t">${t('cs2')}</span></li><li><span class="n">3</span><span class="st-t">${t('cs3')}</span></li></ol>
     <div data-cart></div>
   </div>
-  <div class="mbar mbar--m" data-cbar><div class="mbar__price"><small>${t('total')} · ${t('vat')}</small><b data-ctotal></b></div><a class="btn btn--primary" href="checkout.html">${t('toCheckout')}</a></div>`;
+  <div class="mbar mbar--m" data-cbar><div class="mbar__price"><small>${t('total')}, ${t('vat')}</small><b data-ctotal></b></div><a class="btn btn--primary" href="checkout.html">${t('toCheckout')}</a></div>`;
 }
 function renderCart() {
   const box = qs('[data-cart]'), sub = cartTotal();
@@ -961,7 +1002,7 @@ function renderCart() {
         <a class="citem__img" href="${link('produs.html', { id: p.id })}" tabindex="-1" aria-hidden="true"><img src="${img(p.imgs[0])}" alt="" width="120" height="120" loading="lazy"></a>
         <div><div class="citem__top"><a class="citem__name" href="${link('produs.html', { id: p.id })}">${esc(pname(p))}</a>
           <button class="iconbtn" type="button" data-rmline="${esc(l.key)}" aria-label="${t('remove')}: ${esc(pname(p))}">${icon('trash')}</button></div>
-          <p class="citem__sku">${t('code')}: ${esc(p.sku)} · <span class="stock stock--${p.stock}">${t('st_' + p.stock)}</span></p>
+          <p class="citem__sku"><span>${t('code')}: ${esc(p.sku)}</span><span class="stock stock--${p.stock}">${t('st_' + p.stock)}</span></p>
           ${carLine(l)}
           <div class="citem__foot"><div class="qty qty--sm" role="group" aria-label="${t('qty')}"><button type="button" data-lq="-1" data-key="${esc(l.key)}" aria-label="${t('dec')}">${icon('minus', 'ico--sm')}</button><input type="number" min="1" max="99" value="${l.qty}" aria-label="${t('qty')}" data-lqty="${esc(l.key)}"><button type="button" data-lq="1" data-key="${esc(l.key)}" aria-label="${t('inc')}">${icon('plus', 'ico--sm')}</button></div>
           <span class="price">${priceHTML(p.price * l.qty)}</span></div></div></article>`; }).join('')}
@@ -973,7 +1014,7 @@ function renderCart() {
       <div class="srow"><span>${t('subtotal')}</span><span>${money(sub)}</span></div>
       <div class="srow"><span>${t('shipping')}</span><span>${ship === 0 ? `<b style="color:var(--ok)">${t('free')}</b>` : `<span class="muted">${t('shipNext')}</span>`}</span></div>
       <div class="srow srow--total"><span>${t('total')}<small>${t('vat')}</small></span><b>${money(sub)}</b></div>
-      <a class="btn btn--primary btn--lg btn--block" href="checkout.html">${t('toCheckout')} ${icon('arrow')}</a>
+      <a class="btn btn--primary btn--lg btn--block" href="checkout.html">${t('toCheckout')}</a>
       <ul class="trust"><li>${icon('lock', 'ico--sm')}${t('trust1')}</li><li>${icon('ret', 'ico--sm')}${t('trust2')}</li><li>${icon('shield', 'ico--sm')}${t('trust3')}</li></ul>
       <div class="footer__pay" style="margin-top:0"><span class="paymark">VISA</span><span class="paymark">Mastercard</span><span class="paymark">Apple Pay</span><span class="paymark">Google Pay</span></div>
     </aside></div>`;
@@ -1036,7 +1077,7 @@ function pageCheckout() {
           <details class="optional"><summary>${icon('doc')}<span>${t('coNote')}</span>${icon('plus')}</summary><div class="optional__body"><label class="sr-only" for="note">${t('coNote')}</label><textarea class="input" id="note" placeholder="${t('coNotePh')}"></textarea></div></details>
           <label class="check"><input type="checkbox" required id="terms"><span>${t('coTerms', { t: `<a class="link" href="#">${t('coTermsT')}</a>`, p: `<a class="link" href="#">${t('coTermsP')}</a>` })}</span></label>
           <span class="ferr" id="terms-e" hidden>${t('cfFill')}</span>
-          <button class="btn btn--primary btn--lg btn--block" type="submit">${icon('lock', 'ico--sm')}${t('coPlace')} · <span data-cotot></span></button>
+          <button class="btn btn--primary btn--lg btn--block" type="submit">${icon('lock', 'ico--sm')}${t('coPlace')}&ensp;<span data-cotot></span></button>
         </section>
       </form>
       <aside class="summary co-aside" aria-labelledby="sum2-h">
