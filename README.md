@@ -11,9 +11,11 @@ It keeps Bonbila's logo, layout and backend components. Only the design of those
 
 **Version 2, "Bold" (second design option):** the same pages, data, finder, filters, cart and checkout, in a dark, bolder look. Pages are black and Bonbila yellow appears only where something lights up or where the main action is. Product photos stand on light silver "studio" panels, the only light surfaces. One typeface, Archivo, in three widths: wide for headlines and prices, normal for text, narrow for specs. JetBrains Mono is used only for codes people copy (SKU, VIN). Both fonts are self-hosted and licensed under the SIL Open Font License. The homepage has its own layout:
 - a full-width headlight photo under the floating menu, with a large headline and the finder as a glass panel;
-- two floating cards: a "Compatibil" check with the saved car, and H7 LED 6000K;
+- one floating card: a "Compatibil" check with the saved car;
 - four dark category tiles, each object lit from behind;
 - a light-colour slider (2700–6700 K) that changes a headlight beam and links to the matching bulbs (halogen, LED, or all bulbs for xenon).
+
+Calm pass (after "too crowded" feedback): headings in wide Archivo at medium weight, more black space between and inside sections (168 px per homepage section on desktop, 96 px on phones), cards without outlines, fewer glows, category tiles with the name only, and no socket chips or bulb row under the slider.
 
 The footer of both versions has a "Varianta de design: Clasic | Bold" switch. Technically, `build.mjs` writes the v2 pages to `/v2/` and `/v2/de/` (`<html data-v="2">`), and generates `assets/css/v2.css` from `style.css` (dark token mapping) plus `assets/css/v2-bold.css`. So edit those two files, not `v2.css`. In `app.js`, only the homepage branches (`pageHomeV2()`, `bindBeam()`); every other page is shared.
 

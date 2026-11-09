@@ -787,7 +787,6 @@ const kTech = k => k < 3800 ? 'Halogen' : k < 5000 ? 'Xenon' : 'LED';
 const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 function pageHomeV2() {
   const P = homeParts();
-  const bulbs = [59, 56, 48, 47].map(byId).filter(Boolean);
   const fc = garage || { make: 'Ford', model: 'Kuga', gen: 'Kuga - II', from: 2012, to: null };
   const cats = [
     ['catWipers', 'catWipersD', 'stergatoare-auto-v1', link('categorie.html', { vehicle_type: 'wipers' })],
@@ -797,7 +796,6 @@ function pageHomeV2() {
   ];
   const k0 = 6000;
   const ticks = [[3200, 'Halogen'], [4300, 'Xenon'], [6000, 'LED']];
-  const sockets = [['H7', 'bulb'], ['H4', 'bulb'], ['H1', 'bulb'], ['H11', 'bulb'], ['W5W', 'bulb'], ['LED', 'tech']];
   return `
   <section class="bhero" aria-labelledby="hero-h">
     <div class="bhero__media" aria-hidden="true">
@@ -811,7 +809,6 @@ function pageHomeV2() {
       </div>
       <div class="bhero__cards" aria-hidden="true">
         <div class="fcard fcard--fit"><span class="fcard__st">${icon('check', 'ico--sm')}${t('v2Fit')}</span><div class="fcard__car">${logo(fc.make)}<p><b>${esc(carLabel(fc))}</b><small>${esc(carYears(fc))}</small></p></div></div>
-        <div class="fcard fcard--k"><div class="fcard__top"><span class="sock">H7</span><span class="fcard__tech">LED</span></div><b class="fcard__num">6000<small>K</small></b><span class="fcard__bar"><i style="--x:${kPos(6000)}"></i></span><small>${cap(t('kCool'))}</small></div>
       </div>
     </div>
   </section>
@@ -836,7 +833,6 @@ function pageHomeV2() {
       </div>
       <div class="beam__act">
         <a class="btn btn--primary" href="${link('categorie.html', { vehicle_type: 'bulbs', tech: 'LED' })}" data-kcta>${t('v2KShow', { x: 'LED' })}</a>
-        <div class="sockets" role="group" aria-labelledby="sock-l"><span id="sock-l">${t('bySocket')}</span>${sockets.map(([v, k]) => `<a href="${link('categorie.html', { vehicle_type: 'bulbs', [k]: v })}">${v}</a>`).join('')}</div>
       </div>
     </div>
     <div class="beam__stage" aria-hidden="true">
@@ -844,8 +840,7 @@ function pageHomeV2() {
       <span class="beam__floor"></span>
       <span class="beam__k"><span data-kval>${k0}</span>K</span>
     </div>
-  </div>
-  <div class="wrap"><div class="rail">${bulbs.map(p => card(p, { car: garage })).join('')}</div></div></section>
+  </div></section>
 
   ${P.wipers}
 
