@@ -787,70 +787,144 @@ const kTech = k => k < 3800 ? 'Halogen' : k < 5000 ? 'Xenon' : 'LED';
 const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 function pageHomeV2() {
   const P = homeParts();
-  const fc = garage || { make: 'Ford', model: 'Kuga', gen: 'Kuga - II', from: 2012, to: null };
+  const fc = garage || { make: 'Ford', model: 'Kuga', gen: 'Kuga - II', slug: 'ford--kuga--ii-dm2', from: 2012, to: null };
+  const g = findGen(fc.make, fc.model, fc.slug) || findGen(fc.make, fc.model, fc.gen);
+  const fitW = PRODUCTS.filter(p => p.type === 'wipers' && fitsCar(p, fc));
+  const bulbsAll = PRODUCTS.filter(p => p.type === 'bulbs'), wipersAll = PRODUCTS.filter(p => p.type === 'wipers');
+  const w0 = fitW[0];
+  const wl = w0 ? [parseInt(w0.attrs.len1), parseInt(w0.attrs.len2)].filter(Boolean).join(' + ') + ' mm' : '–';
+  const carHref = link('categorie.html', { vehicle_type: 'wipers', vehicle_make: fc.make, vehicle_model: fc.model, vehicle_generation: fc.slug });
+
+  /* ticker cards: one per socket, technology, wiper length and maker, straight from the catalogue */
+  const group = (list, key) => { const m = new Map(); list.forEach(p => { const k = key(p); if (k) { const e = m.get(k) || []; e.push(p); m.set(k, e); } }); return [...m.entries()].sort((a, b) => b[1].length - a[1].length); };
+  const minP = list => Math.min(...list.map(p => p.price));
+  const tick = (ic, name, sub, list, href, i) => `<a class="tick" href="${href}"${i ? ' tabindex="-1"' : ''}><span class="tick__ic">${ic}</span><span class="tick__t"><b>${esc(name)}</b><small>${esc(sub)}</small></span><span class="tick__v"><b>${t('v2From', { p: money(minP(list)) })}</b><small>${nprod(list.length)}</small></span></a>`;
+  const row1 = i => group(bulbsAll, p => p.attrs.bulb).map(([k, l]) => tick(icon('bulb'), k, [...new Set(l.map(p => p.attrs.tech))].join(', '), l, link('categorie.html', { vehicle_type: 'bulbs', bulb: k }), i)).join('')
+    + group(bulbsAll, p => p.attrs.tech).map(([k, l]) => tick(icon('sparkle'), k, t('tabBulbs'), l, link('categorie.html', { vehicle_type: 'bulbs', tech: k }), i)).join('');
+  const row2 = i => group(wipersAll, p => p.attrs.len1).slice(0, 6).map(([k, l]) => tick(icon('wiper'), k, t('tabWipers'), l, link('categorie.html', { vehicle_type: 'wipers', len1: k }), i)).join('')
+    + group(PRODUCTS, p => p.brand).map(([k, l]) => tick(`<span class="tick__mk">${esc(k.slice(0, 2).toUpperCase())}</span>`, k, l[0].type === 'bulbs' ? t('tabBulbs') : t('tabWipers'), l, link('categorie.html', { vehicle_type: l[0].type, maker: k }), i)).join('');
+  const marquee = (fn, dir) => `<div class="ticker__row${dir ? ' ticker__row--rev' : ''}"><div class="ticker__track"><div class="ticker__g">${fn(0)}</div><div class="ticker__g" aria-hidden="true">${fn(1)}</div></div></div>`;
+
   const cats = [
-    ['catWipers', 'catWipersD', 'stergatoare-auto-v1', link('categorie.html', { vehicle_type: 'wipers' })],
-    ['catLed', 'catLedD', 'bec-led-h7-v1', link('categorie.html', { vehicle_type: 'bulbs', tech: 'LED' })],
-    ['catHalogen', 'catHalogenD', 'bec-halogen-h7-v1', link('categorie.html', { vehicle_type: 'bulbs', tech: 'Halogen' })],
-    ['catParts', 'catPartsD', 'disc-frana-etrier-v1', '#request'],
+    ['wip', 'catWipers', 'catWipersD', 'stergatoare-auto-v1', link('categorie.html', { vehicle_type: 'wipers' }), wipersAll.length, ['650 mm', '2 buc.', 'Bosch']],
+    ['led', 'catLed', 'catLedD', 'bec-led-h7-v1', link('categorie.html', { vehicle_type: 'bulbs', tech: 'LED' }), bulbsAll.filter(p => p.attrs.tech === 'LED').length, ['6000K', '16W', 'H7']],
+    ['hal', 'catHalogen', 'catHalogenD', 'bec-halogen-h7-v1', link('categorie.html', { vehicle_type: 'bulbs', tech: 'Halogen' }), bulbsAll.filter(p => p.attrs.tech === 'Halogen').length, ['3200K', '55W']],
+    ['parts', 'catParts', 'catPartsD', 'disc-frana-etrier-v1', '#request', 0, []],
   ];
   const k0 = 6000;
   const ticks = [[3200, 'Halogen'], [4300, 'Xenon'], [6000, 'LED']];
+  const short = p => esc(pname(p).replace(/,? ?1 Buc$/i, '').replace(/,? ?\d+ ?buc\.?$/i, ''));
+  const mtable = (rows, all, allLbl) => `<div class="mwrap"><table class="mtable">
+    <thead><tr><th scope="col">${t('v2ColProd')}</th><th scope="col">${t('v2ColSpec')}</th><th scope="col">${t('v2ColStock')}</th><th scope="col" class="num">${t('v2ColPrice')}</th><th scope="col"><span class="sr-only">${t('view')}</span></th></tr></thead>
+    <tbody>${rows.map(p => { const sale = p.reg > p.price, nm = esc(pname(p)); return `<tr>
+      <td><a class="mt__p" href="${link('produs.html', { id: p.id })}"><span class="mt__img"><img src="${img(p.imgs[0])}" alt="" width="600" height="600" loading="lazy" decoding="async"></span><span class="mt__n"><small>${esc(p.brand)}</small><b>${short(p)}</b></span></a></td>
+      <td class="mt__spec">${pdetail(p)}</td>
+      <td class="mt__st"><span class="stock stock--${p.stock}">${t('st_' + p.stock)}</span></td>
+      <td class="num"><span class="price${sale ? ' price--sale' : ''}">${sale ? `<del><span class="sr-only">${LANG === 'de' ? 'Alter Preis' : 'Preț inițial'}: </span>${money(p.reg)}</del>` : ''}${priceHTML(p.price)}</span></td>
+      <td class="mt__act">${p.stock === 'out' ? `<a class="pill" href="${link('produs.html', { id: p.id })}" aria-label="${t('view')}: ${nm}">${t('view')}</a>` : `<button class="pill pill--add" type="button" data-add="${p.id}" aria-label="${t('add')}: ${nm}">${icon('plus', 'ico--sm')}<span>${t('addShort')}</span></button>`}</td></tr>`; }).join('')}</tbody>
+  </table><a class="pill pill--more" href="${all}">${allLbl}</a></div>`;
+  const brandWall = D.popular.slice(0, 16);
+
   return `
-  <section class="bhero" aria-labelledby="hero-h">
-    <div class="bhero__media" aria-hidden="true">
-      <picture><source media="(min-width:900px)" srcset="${img('hero-night-car.webp')}"><img src="${img('hero-night-car-800.webp')}" alt="" width="1600" height="1067" fetchpriority="high"></picture>
+  <section class="nhero" aria-labelledby="hero-h">
+    <div class="nhero__glow" aria-hidden="true"><span></span></div>
+    <div class="wrap nhero__in">
+      <p class="npill"><span class="npill__dot" aria-hidden="true"></span>${t('v2Pill', { n: D.brands.length })}</p>
+      <h1 class="nhero__h" id="hero-h">${t('v2Title')}</h1>
+      <p class="nhero__lead">${t('v2Lead')}</p>
+      <div class="nhero__cta"><a class="btn btn--primary btn--lg" href="#finder">${t('pickCar')}</a><a class="btn btn--glass btn--lg" href="#request">${icon('search', 'ico--sm')}${t('v2Vin')}</a></div>
     </div>
-    <div class="wrap bhero__in">
-      <h1 class="bhero__h" id="hero-h">${t('v2Title')}</h1>
-      <div class="bhero__body">
-        <p class="bhero__lead">${t('v2Lead')}</p>
-        ${finderHome()}
-      </div>
-      <div class="bhero__cards" aria-hidden="true">
-        <div class="fcard fcard--fit"><span class="fcard__st">${icon('check', 'ico--sm')}${t('v2Fit')}</span><div class="fcard__car">${logo(fc.make)}<p><b>${esc(carLabel(fc))}</b><small>${esc(carYears(fc))}</small></p></div></div>
-      </div>
-    </div>
+    <div class="wrap"><div class="ndash">
+      <article class="ncar" aria-labelledby="ncar-h">
+        <div class="ncar__top"><span>${t('v2Car')}</span><span class="okpill">${icon('check', 'ico--sm')}${t('v2Fit')}</span></div>
+        <div class="ncar__name">${logo(fc.make)}<h2 id="ncar-h">${esc(carLabel(fc))}</h2></div>
+        ${g ? `<div class="ncar__img"><img src="${img('gens/' + g.img)}" alt="" width="640" height="480" decoding="async"></div>` : ''}
+        <dl class="nstats">
+          <div><dt>${t('v2SWip')}</dt><dd>${wl}</dd></div>
+          <div><dt>${t('v2SFit')}</dt><dd>${fitW.length + bulbsAll.length}</dd></div>
+          <div><dt>${t('v2SYears')}</dt><dd>${esc(carYears(fc))}</dd></div>
+        </dl>
+        <a class="pill pill--more ncar__go" href="${carHref}">${t('seeProducts')}${icon('right', 'ico--sm')}</a>
+      </article>
+      ${finderHome()}
+    </div></div>
+    <div class="wrap"><ul class="nmakers" aria-label="${t('makersTitle')}">${['BOSCH', 'OSRAM', 'PHILIPS', 'VALEO', 'HELLA', 'DENSO', 'SWF', 'TRICO', 'NEOLUX'].map(x => `<li>${x}</li>`).join('')}</ul></div>
   </section>
 
-  <section class="bsec" aria-labelledby="cats-h"><div class="wrap">
-    <div class="bhead"><h2 id="cats-h">${t('v2CatsTitle')}</h2><p>${t('catsLead')}</p></div>
-    <div class="bcats">${cats.map(([h, d, im, href]) => `<a class="bcat" href="${href}">
-      <span class="bcat__t"><h3>${t(h)}</h3><small>${t(d)}</small></span>
-      <span class="bcat__img"><img src="${img('cat/' + im + '.webp')}" alt="" width="${CAT_IMG[im][0]}" height="${CAT_IMG[im][1]}" loading="lazy" style="--k:${CAT_IMG[im][3]}"></span>
-      <span class="bcat__go" aria-hidden="true">${icon('right')}</span></a>`).join('')}</div>
+  <section class="nsec nsec--tick" aria-labelledby="tick-h">
+    <div class="wrap"><div class="nhead"><h2 id="tick-h">${t('v2TickTitle')}</h2><p>${t('v2TickLead')}</p></div></div>
+    <div class="ticker">${marquee(row1, 0)}${marquee(row2, 1)}</div>
+  </section>
+
+  <section class="nsec" aria-labelledby="cats-h"><div class="wrap">
+    <div class="nhead"><h2 id="cats-h">${t('v2BentoTitle')}</h2><p>${t('catsLead')}</p></div>
+    <div class="bento">${cats.map(([k, h, d, im, href, n, chips]) => `<a class="bcard bcard--${k}" href="${href}">
+      <span class="bcard__t"><h3>${t(h)}</h3><small>${t(d)}</small></span>
+      ${chips.length ? `<span class="bcard__chips">${chips.map(c => `<span>${c}</span>`).join('')}</span>` : ''}
+      <span class="bcard__foot"><span class="bcard__btn">${n ? t('seeProducts') : t('v2Ask')}${icon('right', 'ico--sm')}</span>${n ? `<small>${nprod(n)}</small>` : ''}</span>
+      <span class="bcard__img" aria-hidden="true"><img src="${img('cat/' + im + '.webp')}" alt="" width="${CAT_IMG[im][0]}" height="${CAT_IMG[im][1]}" loading="lazy"></span></a>`).join('')}</div>
   </div></section>
 
-  <section class="bsec beam" aria-labelledby="light-h" data-beam style="--kc:${kColor(k0)}"><div class="wrap beam__grid">
-    <div class="beam__copy">
-      <h2 id="light-h">${t('v2LightTitle')}</h2>
-      <p>${t('v2LightLead')}</p>
-      <div class="beam__read"><b><span data-kval>${k0}</span><small>K</small></b><span data-kname>${cap(kName(k0))}. ${t('v2KTyp', { x: kTech(k0) })}</span></div>
-      <div class="kslide">
-        <label class="sr-only" for="kslider">${t('v2KLabel')}</label>
-        <input type="range" id="kslider" min="2700" max="6700" step="100" value="${k0}" aria-valuetext="${k0} K, ${kName(k0)}" data-kslider>
-        <ul class="kslide__ticks" aria-hidden="true">${ticks.map(([k, n]) => `<li style="--x:${kPos(k)}"><b>${k}K</b><span>${n}</span></li>`).join('')}</ul>
+  <section class="nsec beam" aria-labelledby="light-h" data-beam style="--kc:${kColor(k0)}"><div class="wrap">
+    <div class="nhead"><h2 id="light-h">${t('v2LightTitle')}</h2><p>${t('v2LightLead')}</p></div>
+    <div class="kwin">
+      <div class="kwin__bar"><span class="kwin__t">${icon('bulb', 'ico--sm')}${t('v2KTitle')}</span>
+        <div class="seg" role="group" aria-label="${t('v2KLabel')}">${ticks.map(([k, n]) => `<button type="button" data-kset="${k}" aria-pressed="${k === k0}">${n}</button>`).join('')}</div></div>
+      <div class="kwin__body">
+        <div class="beam__stage" aria-hidden="true">
+          <span class="beam__cone"></span><span class="beam__spot"></span><span class="beam__lamp"></span>
+          <span class="beam__floor"></span>
+          <span class="beam__k"><span data-kval>${k0}</span>K</span>
+        </div>
+        <div class="kwin__side">
+          <div class="beam__read"><b><span data-kval>${k0}</span><small>K</small></b><span data-kname>${cap(kName(k0))}. ${t('v2KTyp', { x: kTech(k0) })}</span></div>
+          <div class="kslide">
+            <label class="sr-only" for="kslider">${t('v2KLabel')}</label>
+            <input type="range" id="kslider" min="2700" max="6700" step="100" value="${k0}" aria-valuetext="${k0} K, ${kName(k0)}" data-kslider>
+            <ul class="kslide__ticks" aria-hidden="true">${ticks.map(([k, n]) => `<li style="--x:${kPos(k)}"><b>${k}K</b><span>${n}</span></li>`).join('')}</ul>
+          </div>
+          <a class="btn btn--primary btn--block" href="${link('categorie.html', { vehicle_type: 'bulbs', tech: 'LED' })}" data-kcta>${t('v2KShow', { x: 'LED' })}</a>
+        </div>
       </div>
-      <div class="beam__act">
-        <a class="btn btn--primary" href="${link('categorie.html', { vehicle_type: 'bulbs', tech: 'LED' })}" data-kcta>${t('v2KShow', { x: 'LED' })}</a>
-      </div>
-    </div>
-    <div class="beam__stage" aria-hidden="true">
-      <span class="beam__cone"></span><span class="beam__spot"></span><span class="beam__lamp"></span>
-      <span class="beam__floor"></span>
-      <span class="beam__k"><span data-kval>${k0}</span>K</span>
     </div>
   </div></section>
 
-  ${P.wipers}
+  <section class="nsec" aria-labelledby="top-h"><div class="wrap">
+    <div class="nhead nhead--row"><div><h2 id="top-h">${t('v2TopTitle')}</h2><p>${t('v2TopLead')}</p></div>
+      <div class="seg" role="tablist" aria-label="${t('finderTabs')}"><button role="tab" type="button" id="tt-b" aria-controls="tp-b" aria-selected="true" data-ttab="b">${t('tabBulbs')}</button><button role="tab" type="button" id="tt-w" aria-controls="tp-w" aria-selected="false" tabindex="-1" data-ttab="w">${t('tabWipers')}</button></div></div>
+    <div role="tabpanel" id="tp-b" aria-labelledby="tt-b">${mtable([48, 59, 47, 56, 49, 61, 62].map(byId).filter(Boolean), link('categorie.html', { vehicle_type: 'bulbs' }), t('v2KAll'))}</div>
+    <div role="tabpanel" id="tp-w" aria-labelledby="tt-w" hidden>${mtable([2172, 1381, 1554, 1282, 1696, 2129, 1478].map(byId).filter(Boolean), link('categorie.html', { vehicle_type: 'wipers' }), t('wipAll'))}</div>
+  </div></section>
 
-  ${P.how}
+  <section class="nsec" aria-labelledby="how-h"><div class="wrap nhow">
+    <div class="nhow__list"><h2 id="how-h">${t('howTitle')}</h2>
+      <ol>${[1, 2, 3].map(i => `<li><span class="nhow__n" aria-hidden="true">0${i}</span><div><h3>${t('how' + i)}</h3><p>${t('how' + i + 'd')}</p></div></li>`).join('')}</ol></div>
+    <figure class="nphoto">
+      <picture><source media="(min-width:900px)" srcset="${img('hero-night-car.webp')}"><img src="${img('hero-night-car-800.webp')}" alt="" width="1600" height="1067" loading="lazy"></picture>
+      <figcaption class="nphoto__card"><span class="okpill">${icon('check', 'ico--sm')}${t('v2Fit')}</span><b>${t('v2PhotoT')}</b><span class="nphoto__car">${logo(fc.make)}${esc(carLabel(fc))}</span></figcaption>
+    </figure>
+  </div></section>
 
-  ${P.brands}
+  <section class="nsec" aria-labelledby="brands-h"><div class="wrap">
+    <div class="nhead nhead--row"><div><h2 id="brands-h">${t('brandsTitle')}</h2><p>${t('brandsLead')}</p></div>
+      <button class="btn btn--glass" type="button" data-allbrands>${t('brandsAll', { n: D.brands.length })}</button></div>
+    <div class="brandwall">${brandWall.map(m => `<a href="${link('categorie.html', { vehicle_type: 'wipers', vehicle_make: m })}" aria-label="${esc(m)}">${logo(m)}<span aria-hidden="true">${esc(m === 'Mercedes-Benz' ? 'Mercedes' : m)}</span></a>`).join('')}</div>
+  </div></section>
 
   ${P.guides}
 
-  ${P.request}`;
+  <section class="nsec" id="request" aria-labelledby="req-h"><div class="wrap"><div class="nreq">
+    <span class="nreq__obj" aria-hidden="true"><img src="${img('cat/disc-frana-etrier-v1.webp')}" alt="" width="720" height="720" loading="lazy"></span>
+    <div class="nreq__copy"><p class="npill">${icon('search', 'ico--sm')}${t('catParts')}</p><h2 id="req-h">${t('reqTitle')}</h2><p>${t('reqLead')}</p>
+      <ol class="nreq__steps">${[1, 2, 3].map(i => `<li><span aria-hidden="true">0${i}</span>${t('v2Rq' + i)}</li>`).join('')}</ol></div>
+    <form class="nreq__form" data-reqform novalidate>
+      <div class="field"><label for="rq-vin">${t('reqVin')}</label><input class="input" id="rq-vin" maxlength="17" autocapitalize="characters" spellcheck="false" placeholder="WF0AXXWPMAFJ48210" aria-describedby="rq-vin-h" style="text-transform:uppercase"><span class="fhelp" id="rq-vin-h">${t('reqVinHelp')}</span></div>
+      <div class="row2"><div class="field"><label for="rq-part">${t('reqPart')}</label><input class="input" id="rq-part" placeholder="${t('reqPartPh')}"></div>
+      <div class="field"><label for="rq-tel">${t('reqPhone')}</label><input class="input" id="rq-tel" type="tel" inputmode="tel" autocomplete="tel" placeholder="07xx xxx xxx"></div></div>
+      <button class="btn btn--primary btn--lg" type="submit">${t('reqSend')}</button>
+    </form>
+  </div></div></section>
+  <p class="nmark" aria-hidden="true">Bonbila</p>`;
 }
 function bindBeam() {
   const sec = qs('[data-beam]'); if (!sec) return;
@@ -864,12 +938,27 @@ function bindBeam() {
     r.setAttribute('aria-valuetext', `${k} K, ${kName(k)}`);
     cta.textContent = tech === 'Xenon' ? t('v2KAll') : t('v2KShow', { x: tech });
     cta.href = link('categorie.html', tech === 'Xenon' ? { vehicle_type: 'bulbs' } : { vehicle_type: 'bulbs', tech });
+    qsa('[data-kset]', sec).forEach(b => b.setAttribute('aria-pressed', String(b.textContent === tech)));
   };
   r.addEventListener('input', set); set();
+  qsa('[data-kset]', sec).forEach(b => b.addEventListener('click', () => { r.value = b.dataset.kset; set(); }));
+}
+/* v2 "most searched" table: two tabs, arrow keys move between them */
+function bindTopTabs() {
+  const tabs = qsa('[data-ttab]'); if (!tabs.length) return;
+  const pick = (tab, focus) => {
+    tabs.forEach(b => { const on = b === tab; b.setAttribute('aria-selected', on); b.tabIndex = on ? 0 : -1; qs('#' + b.getAttribute('aria-controls')).hidden = !on; });
+    if (focus) tab.focus();
+  };
+  tabs.forEach((b, i) => {
+    b.addEventListener('click', () => pick(b));
+    b.addEventListener('keydown', e => { if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); pick(tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length], true); } });
+  });
 }
 function bindHome() {
   bindFinder(qs('[data-finder]'));
   bindBeam();
+  bindTopTabs();
   const rf = qs('[data-reqform]'); rf && rf.addEventListener('submit', e => { e.preventDefault(); toast(t('reqSent')); rf.reset(); });
   const ab = qs('[data-allbrands]'); ab && ab.addEventListener('click', () => { const f = qs('#finder'); f.scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(() => qs('.combo__btn', f).click(), 350); });
 }
@@ -891,7 +980,7 @@ function catState() {
     saveGarage(car);
   }
   const sel = {};
-  ['tech', 'maker', 'bulb'].forEach(k => { if (params.get(k)) sel[k] = new Set([params.get(k)]); });
+  ['tech', 'maker', 'bulb', 'len1'].forEach(k => { if (params.get(k)) sel[k] = new Set([params.get(k)]); });
   return { type, car, make: make && !model ? make : null, q: params.get('q') || '', sel, stock: false, pmin: '', pmax: '', sort: 'rec', view: store.get('bb_view', matchMedia('(max-width:639px)').matches ? 'list' : 'grid') };
 }
 function baseList() {

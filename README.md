@@ -9,18 +9,20 @@ It keeps Bonbila's logo, layout and backend components. Only the design of those
 
 **Floating menu:** the header is a dark capsule that floats above the page and stays on top while scrolling. On desktop, "Becuri auto" and "Ștergătoare" open floating menu panels (by socket, technology, brand, maker, and the saved car), and search opens as a floating panel with frequent searches. On phones, the menu opens as a floating night card with the two categories, the saved car, sockets and links, and the bottom bars (Filters/Sort, Add to cart, Checkout) float as capsules too. In Elementor this maps to a sticky header with a Mega Menu widget; the panels use the same night colours as the header.
 
-**Version 2, "Bold" (second design option):** the same pages, data, finder, filters, cart and checkout, in a dark, bolder look. Pages are black and Bonbila yellow appears only where something lights up or where the main action is. Product photos stand on light silver "studio" panels, the only light surfaces. One typeface, Archivo, in three widths: wide for headlines and prices, normal for text, narrow for specs. JetBrains Mono is used only for codes people copy (SKU, VIN). Both fonts are self-hosted and licensed under the SIL Open Font License. The homepage has its own layout:
-- a full-width headlight photo under the floating menu, with a large headline and the finder as a glass panel;
-- one floating card: a "Compatibil" check with the saved car;
-- four dark category tiles, each object lit from behind;
-- a light-colour slider (2700–6700 K) that changes a headlight beam and links to the matching bulbs (halogen, LED, or all bulbs for xenon).
+**Version 2, "LED night" (second design option):** the same pages, data, finder, filters, cart and checkout, in a dark look modelled on the two fintech dashboards Paul sent (FluX and Nexora on Behance): near-black pages, cool LED-blue glows instead of their violet, glass panels with a thin light edge, pill buttons, and big quiet headlines. Bonbila yellow stays for the logo and the main actions; green marks "fits" and "in stock". One typeface, Archivo, at normal width (headlines at weight 500), plus JetBrains Mono only for codes people copy (SKU, VIN). Both fonts are self-hosted under the SIL Open Font License. The homepage reads like a product dashboard:
+- **Hero:** a centred headline over a soft blue glow and grid, then one glass "dashboard" with the saved car (photo, wiper sizes, matching products, years, "Compatibil" check) next to the vehicle finder. Below it, a quiet row of maker names.
+- **Ticker:** two slow rows of cards, one per socket, technology, wiper length and maker, each with "from" price and product count, each opening the catalogue already filtered (new `len1` URL filter for wiper length). Paused on hover and focus, static with reduced motion.
+- **Categories:** a bento grid of four lit tiles (wipers tall, LED, halogen, parts on request wide) with key specs as chips.
+- **Light simulator:** a window with Halogen / Xenon / LED presets and a 2700–6700 K slider that changes the headlight beam and links to the matching bulbs.
+- **Most searched:** a market-style table (product, details, stock, price, add) with bulb / wiper tabs; on phones it becomes a list.
+- **How it works** next to a night photo with a glass "Compatibil" card, the brand wall, guides, a "parts on request" banner with a 3-step strip and the VIN form, and a large "Bonbila" wordmark above the footer.
 
-Calm pass (after "too crowded" feedback): headings in wide Archivo at medium weight, more black space between and inside sections (168 px per homepage section on desktop, 96 px on phones), cards without outlines, fewer glows, category tiles with the name only, and no socket chips or bulb row under the slider.
+Earlier v2 rounds ("Bold", then a calmer pass) are in git history (commits c8b7fbb and 0c6ed11) if Bonbila wants to compare.
 
-The footer of both versions has a "Varianta de design: Clasic | Bold" switch. Technically, `build.mjs` writes the v2 pages to `/v2/` and `/v2/de/` (`<html data-v="2">`), and generates `assets/css/v2.css` from `style.css` (dark token mapping) plus `assets/css/v2-bold.css`. So edit those two files, not `v2.css`. In `app.js`, only the homepage branches (`pageHomeV2()`, `bindBeam()`); every other page is shared.
+The footer of both versions has a "Varianta de design: Clasic | Noapte" switch (DE: "Klassisch | Nacht"). Technically, `build.mjs` writes the v2 pages to `/v2/` and `/v2/de/` (`<html data-v="2">`), and generates `assets/css/v2.css` from `style.css` (dark token mapping) plus `assets/css/v2-bold.css`. So edit those two files, not `v2.css`. In `app.js`, only the homepage branches (`pageHomeV2()`, `bindBeam()`, `bindTopTabs()`); every other page is shared.
 
 **Live:** https://paulborlovan-bb.github.io/bonbila-redesign/ · German: https://paulborlovan-bb.github.io/bonbila-redesign/de/
-**Live, version 2 (Bold):** https://paulborlovan-bb.github.io/bonbila-redesign/v2/ · German: https://paulborlovan-bb.github.io/bonbila-redesign/v2/de/
+**Live, version 2 (LED night):** https://paulborlovan-bb.github.io/bonbila-redesign/v2/ · German: https://paulborlovan-bb.github.io/bonbila-redesign/v2/de/
 
 | Page | Romanian | German | Matches on the WP site |
 |---|---|---|---|

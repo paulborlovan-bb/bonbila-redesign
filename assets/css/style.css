@@ -407,11 +407,13 @@ textarea.input{min-height:110px;padding:14px 16px;resize:vertical}
 /* ---------- vehicle finder (wraps their .filter / .tabs / .ymm-select) ---------- */
 .finder{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:0 1px 2px rgba(14,20,34,.05),0 28px 56px -32px rgba(14,20,34,.3);padding:14px;margin-top:28px}
 @media (min-width:640px){.finder{padding:20px}}
-.tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--bg);border-radius:999px;padding:4px}
+.tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;background:var(--bg);border-radius:999px;padding:4px}
 .tabs [role=tab]{display:flex;align-items:center;justify-content:center;gap:8px;height:44px;border-radius:999px;border:0;background:transparent;font:600 16px/1 var(--f-body);color:var(--ink-2);transition:background .2s,color .2s}
 .tabs [role=tab]:hover{color:var(--ink)}
 .tabs [role=tab][aria-selected=true]{background:var(--night);color:#fff}
 .tabs [role=tab][aria-selected=true] .ico{color:var(--brand)}
+@media (max-width:419px){:lang(de) .tabs [role=tab]{font-size:clamp(13px,3.9vw,16px)}:lang(de) .tabs [role=tab] .ico{display:none}}
+@media (max-width:359px){.tabs [role=tab] .ico{display:none}}
 .finder__step{margin-top:18px}
 .finder__label{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;font:600 15px/1.2 var(--f-body)}
 .finder__label .num{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;border:1px solid var(--line-2);color:var(--ink-2);font:600 13px/1 var(--f-data);margin-right:10px}
