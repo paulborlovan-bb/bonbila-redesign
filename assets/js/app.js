@@ -830,12 +830,7 @@ function pageHomeV2() {
       <p class="nhero__lead">${t('v2Lead')}</p>
       <div class="nhero__cta"><a class="btn btn--primary btn--lg" href="#finder">${t('pickCar')}</a><a class="btn btn--glass btn--lg" href="#request">${icon('search', 'ico--sm')}${t('v2Vin')}</a></div>
     </div>
-    <div class="wrap"><div class="ndash">${finderHome({ big: true })}</div></div>
-  </section>
-
-  <section class="nsec nsec--tick" aria-labelledby="tick-h">
-    <div class="wrap"><div class="nhead"><h2 id="tick-h">${t('v2TickTitle')}</h2><p>${t('v2TickLead')}</p></div></div>
-    <div class="ticker">${marquee(row1, 0)}${marquee(row2, 1)}</div>
+    <div class="wrap nhero__road">${HERO_CAR}<div class="ndash">${finderHome({ big: true })}</div></div>
   </section>
 
   <section class="nsec nsec--sun" id="parasolar" aria-labelledby="sun-h"><div class="wrap"><div class="nsun" data-sun>
@@ -843,14 +838,22 @@ function pageHomeV2() {
       <p class="nsun__tags"><span class="nsun__new">${t('v2SunNew')}</span><span class="nsun__by">${t('v2SunBy')}</span></p>
       <h2 id="sun-h">${t('v2SunTitle')}</h2>
       <p class="nsun__lead">${t('v2SunLead')}</p>
-      <ul class="nsun__f">${[['sun', 'v2SunF1'], ['shield', 'v2SunF2'], ['truck', 'v2SunF3']].map(([ic, k]) => `<li><span>${icon(ic, 'ico--sm')}</span>${t(k)}</li>`).join('')}</ul>
+      <ul class="nsun__f">${[['sun', 'v2SunF1'], ['car', 'v2SunF2'], ['lock', 'v2SunF3']].map(([ic, k]) => `<li><span>${icon(ic, 'ico--sm')}</span>${t(k)}</li>`).join('')}</ul>
       <a class="btn btn--ink btn--lg" href="#parasolar" data-sun-cta>${t('v2SunCta')}${icon('right', 'ico--sm')}</a>
     </div>
-    <figure class="nsun__art">
-      ${SUNSHADE_SVG}
-      <figcaption class="nsun__tag"><span class="nsun__dot" aria-hidden="true"></span>${t('v2SunName')}</figcaption>
+    <figure class="nsun__art" aria-label="${t('v2SunName')}">
+      ${sunScene()}
+      <figcaption class="nsun__how"><span class="sr-only">${t('v2SunHow')}</span>
+        <ol class="nsun__steps">${[1, 2, 3].map(i => `<li><button type="button" data-sun-step="${i}"><span class="nsun__sn" aria-hidden="true"><b>${i}</b>${icon('check', 'ico--sm')}</span>${t('v2SunS' + i)}</button></li>`).join('')}</ol>
+        <button type="button" class="nsun__replay" data-sun-replay aria-label="${t('v2SunReplay')}" title="${t('v2SunReplay')}">${icon('ret', 'ico--sm')}</button>
+      </figcaption>
     </figure>
   </div></div></section>
+
+  <section class="nsec nsec--tick" aria-labelledby="tick-h">
+    <div class="wrap"><div class="nhead"><h2 id="tick-h">${t('v2TickTitle')}</h2><p>${t('v2TickLead')}</p></div></div>
+    <div class="ticker">${marquee(row1, 0)}${marquee(row2, 1)}</div>
+  </section>
 
   <section class="nsec" aria-labelledby="cats-h"><div class="wrap">
     <div class="nhead"><h2 id="cats-h">${t('v2BentoTitle')}</h2><p>${t('catsLead')}</p></div>
@@ -916,43 +919,86 @@ function pageHomeV2() {
   <p class="nmark" aria-hidden="true">Bonbila</p>`;
 }
 
-/* Bonbila's own windshield sunshade, drawn as the front of a car with the shade in the windshield.
-   Placeholder art until Bonbila sends product photos. */
-const SUNSHADE_SVG = `<svg class="nsun__svg" viewBox="0 0 560 380" role="img" aria-hidden="true" focusable="false">
+/* hero: a faint side outline of a car, parked behind the finder; LED blue at the back, brand yellow at the headlight */
+const HERO_CAR = `<svg class="nhero__car" viewBox="0 0 1200 360" aria-hidden="true" focusable="false">
   <defs>
-    <linearGradient id="sb-body" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#232A44"/><stop offset=".55" stop-color="#10142A"/><stop offset="1" stop-color="#05070F"/></linearGradient>
-    <linearGradient id="sb-pleat" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FBFCFE"/><stop offset=".42" stop-color="#D3D8E2"/><stop offset=".5" stop-color="#9AA2B3"/><stop offset=".58" stop-color="#C9CFDA"/><stop offset="1" stop-color="#F1F3F8"/></linearGradient>
-    <pattern id="sb-pleats" width="17" height="40" patternUnits="userSpaceOnUse"><rect width="17" height="40" fill="url(#sb-pleat)"/></pattern>
-    <linearGradient id="sb-shine" x1="0" y1="0" x2="1" y2="1"><stop offset=".25" stop-color="#fff" stop-opacity="0"/><stop offset=".4" stop-color="#fff" stop-opacity=".55"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/></linearGradient>
-    <linearGradient id="sb-led" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7C88FF"/><stop offset="1" stop-color="#C9D9FF"/></linearGradient>
-    <linearGradient id="sb-hal" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#FFC20E"/><stop offset="1" stop-color="#FFE9A8"/></linearGradient>
-    <filter id="sb-blur" x="-50%" y="-200%" width="200%" height="500%"><feGaussianBlur stdDeviation="7"/></filter>
-    <clipPath id="sb-ws"><path d="M150 74Q156 63 171 63H389Q404 63 410 74L462 212Q465 222 454 222H106Q95 222 98 212Z"/></clipPath>
+    <linearGradient id="hc-ink" gradientUnits="userSpaceOnUse" x1="40" y1="0" x2="1160" y2="0"><stop offset="0" stop-color="var(--hc-a)"/><stop offset=".5" stop-color="var(--hc-m)"/><stop offset="1" stop-color="var(--hc-b)"/></linearGradient>
+    <radialGradient id="hc-glow"><stop offset="0" stop-color="#FFC20E" stop-opacity=".75"/><stop offset="1" stop-color="#FFC20E" stop-opacity="0"/></radialGradient>
   </defs>
-  <ellipse cx="280" cy="366" rx="250" ry="12" fill="#000" opacity=".22"/>
-  <path d="M124 72Q132 50 156 48H404Q428 50 436 72L496 228H64Z" fill="url(#sb-body)"/>
-  <path d="M150 74Q156 63 171 63H389Q404 63 410 74L462 212Q465 222 454 222H106Q95 222 98 212Z" fill="#1B2240"/>
-  <g clip-path="url(#sb-ws)">
-    <g class="nsun__shade"><rect x="90" y="60" width="380" height="166" fill="url(#sb-pleats)"/>
-      <text x="280" y="160" text-anchor="middle" font-family="Archivo,Arial,sans-serif" font-weight="600" font-size="30" letter-spacing="-1" fill="#0B0E1A" fill-opacity=".72">bonbila</text>
-      <circle cx="338" cy="140" r="5" fill="#FFC20E"/></g>
-    <path d="M254 63h52v8a26 26 0 0 1-52 0z" fill="#1B2240"/>
-    <rect x="266" y="66" width="28" height="15" rx="5" fill="#0A0D1A"/>
-    <path d="M60 222 250 30h120L180 222Z" fill="url(#sb-shine)" opacity=".7"/>
+  <g class="nhero__lines" fill="none" stroke="url(#hc-ink)" stroke-linecap="round" stroke-linejoin="round">
+    <path pathLength="1" d="M96 296C76 294 62 282 60 262L58 232C58 214 66 200 84 194L168 176C236 140 300 96 380 78C470 58 600 52 690 60C740 66 780 88 838 132C860 148 880 156 912 162L1060 184C1100 190 1124 200 1136 216C1146 232 1146 262 1138 280C1132 292 1120 298 1104 300H1006A68 68 0 0 0 870 300H330A68 68 0 0 0 194 300H120Q104 300 96 296Z"/>
+    <path pathLength="1" d="M360 150C420 112 470 92 530 82C610 72 690 74 734 86C768 96 796 118 816 140L822 150Z"/>
+    <path pathLength="1" d="M122 202C400 186 800 180 1080 194"/><path pathLength="1" d="M806 150C808 138 832 134 842 142L846 154"/>
+    <circle pathLength="1" cx="262" cy="300" r="52"/><circle pathLength="1" cx="938" cy="300" r="52"/>
+    <circle pathLength="1" cx="262" cy="300" r="30"/><circle pathLength="1" cx="938" cy="300" r="30"/>
   </g>
-  <path d="M66 198 28 192c-11-1-17 7-15 15l3 12c2 8 10 10 17 7l37-14z" fill="url(#sb-body)"/>
-  <path d="M494 198l38-6c11-1 17 7 15 15l-3 12c-2 8-10 10-17 7l-37-14z" fill="url(#sb-body)"/>
-  <path d="M40 236Q44 224 64 222H496Q516 224 520 236L540 320Q543 344 518 346H42Q17 344 20 320Z" fill="url(#sb-body)"/>
-  <path d="M64 226H496" stroke="#fff" stroke-opacity=".14" stroke-width="2"/>
-  <path d="M62 262Q66 252 82 254L190 268Q198 270 194 278L188 286Q186 290 178 289L74 280Q60 278 62 262Z" fill="#7C88FF" filter="url(#sb-blur)" opacity=".9"/>
-  <path d="M498 262Q494 252 478 254L370 268Q362 270 366 278L372 286Q374 290 382 289L486 280Q500 278 498 262Z" fill="#FFC20E" filter="url(#sb-blur)" opacity=".9"/>
-  <path d="M66 263Q69 256 82 258L186 271Q190 272 188 276L185 281Q184 284 179 284L76 276Q64 274 66 263Z" fill="url(#sb-led)"/>
-  <path d="M494 263Q491 256 478 258L374 271Q370 272 372 276L375 281Q376 284 381 284L484 276Q496 274 494 263Z" fill="url(#sb-hal)"/>
-  <rect x="214" y="282" width="132" height="38" rx="14" fill="#04050B"/>
-  <path d="M226 294h108M226 302h108M226 310h108" stroke="#fff" stroke-opacity=".08" stroke-width="2"/>
-  <circle cx="280" cy="301" r="8" fill="#FFC20E"/>
-  <rect x="44" y="338" width="64" height="30" rx="8" fill="#05070F"/>
-  <rect x="452" y="338" width="64" height="30" rx="8" fill="#05070F"/>
+  <g class="nhero__lamp"><circle cx="1110" cy="206" r="58" fill="url(#hc-glow)"/><path d="M1052 192C1082 196 1110 202 1128 212L1120 218C1096 212 1070 207 1048 201Z" fill="#FFC20E"/></g>
+</svg>`;
+
+/* Bonbila's own windshield sunshade (from their product photos and sketches): a silver cover laid on the
+   outside of the windshield, straps closed inside the front doors, wipers lowered on top. Plays once in view;
+   the three steps below the drawing replay it. */
+const sunScene = () => `<svg class="nsun__svg" viewBox="0 0 600 420" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="ss-body" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#262E4A"/><stop offset=".6" stop-color="#12162C"/><stop offset="1" stop-color="#070912"/></linearGradient>
+    <linearGradient id="ss-hood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1A203A"/><stop offset="1" stop-color="#2B3456"/></linearGradient>
+    <linearGradient id="ss-glass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2A3560"/><stop offset="1" stop-color="#0E1226"/></linearGradient>
+    <radialGradient id="ss-hot" cx=".75" cy=".2" r=".9"><stop offset="0" stop-color="#FFE08A"/><stop offset=".45" stop-color="#FF9A1F"/><stop offset="1" stop-color="#E2541B"/></radialGradient>
+    <linearGradient id="ss-silver" x1="0" y1="0" x2="1" y2=".35"><stop offset="0" stop-color="#C7CDD8"/><stop offset=".22" stop-color="#F4F6FA"/><stop offset=".48" stop-color="#D3D8E1"/><stop offset=".7" stop-color="#F7F8FB"/><stop offset="1" stop-color="#BCC3CF"/></linearGradient>
+    <linearGradient id="ss-led" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7C88FF"/><stop offset="1" stop-color="#C9D9FF"/></linearGradient>
+    <linearGradient id="ss-hal" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#FFC20E"/><stop offset="1" stop-color="#FFE9A8"/></linearGradient>
+    <filter id="ss-blur" x="-50%" y="-200%" width="200%" height="500%"><feGaussianBlur stdDeviation="7"/></filter>
+    <filter id="ss-soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="9"/></filter>
+    <clipPath id="ss-ws"><path d="M204 74Q208 66 218 66H382Q392 66 396 74L452 190Q455 198 446 198H154Q145 198 148 190Z"/></clipPath>
+    <clipPath id="ss-dc"><circle cx="70" cy="74" r="66"/></clipPath>
+  </defs>
+  <ellipse cx="300" cy="404" rx="262" ry="14" fill="#7A4A00" opacity=".22"/>
+  <g class="ss-sun"><circle cx="540" cy="54" r="46" fill="#FFFBEA" opacity=".55" filter="url(#ss-soft)"/><circle cx="540" cy="54" r="22" fill="#FFFBEA"/></g>
+  <path class="ss-in" d="M516 70 402 108M522 86 432 146M508 60 362 84" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 9"/>
+  <path d="M196 70Q202 50 222 48H378Q398 50 404 70Z" fill="url(#ss-body)"/>
+  <path d="M194 66H406L474 202H126Z" fill="url(#ss-body)"/>
+  <path d="M204 74Q208 66 218 66H382Q392 66 396 74L452 190Q455 198 446 198H154Q145 198 148 190Z" fill="url(#ss-glass)"/>
+  <g clip-path="url(#ss-ws)">
+    <path d="M140 182Q300 164 460 182V200H140Z" fill="#05070F" opacity=".85"/>
+    <path d="M150 198 262 66H300L190 198Z" fill="#fff" opacity=".1"/>
+    <path class="ss-heat" d="M140 60H460V200H140Z" fill="url(#ss-hot)" opacity=".8"/>
+  </g>
+  <path d="M128 176 92 168Q76 166 74 180L76 192Q78 200 90 198L130 190Z" fill="url(#ss-body)"/>
+  <path d="M472 176 508 168Q524 166 526 180L524 192Q522 200 510 198L470 190Z" fill="url(#ss-body)"/>
+  <path d="M126 202H474Q492 202 500 220L536 300Q540 310 528 312H72Q60 310 64 300L100 220Q108 202 126 202Z" fill="url(#ss-hood)"/>
+  <path d="M226 206Q246 262 250 310M374 206Q354 262 350 310" stroke="#fff" stroke-opacity=".08" stroke-width="2" fill="none"/>
+  <path d="M150 304Q214 236 330 214Q238 250 196 304Z" fill="#fff" opacity=".07"/>
+  <path d="M64 304H536Q552 306 554 322L550 352Q548 368 530 370H70Q52 368 50 352L46 322Q48 306 64 304Z" fill="url(#ss-body)"/>
+  <path d="M68 308 196 320Q203 322 199 328L193 333Q190 336 181 335L78 327Q64 325 68 308Z" fill="#7C88FF" filter="url(#ss-blur)" opacity=".9"/>
+  <path d="M532 308 404 320Q397 322 401 328L407 333Q410 336 419 335L522 327Q536 325 532 308Z" fill="#FFC20E" filter="url(#ss-blur)" opacity=".9"/>
+  <path d="M68 308 196 320Q203 322 199 328L193 333Q190 336 181 335L78 327Q64 325 68 308Z" fill="url(#ss-led)"/>
+  <path d="M532 308 404 320Q397 322 401 328L407 333Q410 336 419 335L522 327Q536 325 532 308Z" fill="url(#ss-hal)"/>
+  <path d="M216 324H384Q393 324 390 334L382 358Q379 366 369 366H231Q221 366 218 358L210 334Q207 324 216 324Z" fill="#04050B"/>
+  <path d="M230 336H370M232 345H368M236 354H364" stroke="#fff" stroke-opacity=".07" stroke-width="2"/>
+  <circle cx="300" cy="345" r="7" fill="#FFC20E"/>
+  <rect x="60" y="364" width="64" height="32" rx="8" fill="#05070F"/><rect x="476" y="364" width="64" height="32" rx="8" fill="#05070F"/>
+  <g class="ss-cover">
+    <path d="M188 62Q194 50 210 50H390Q406 50 412 62L470 196Q474 208 460 208H140Q126 208 130 196Z" fill="url(#ss-silver)" stroke="#8E97A8" stroke-width="1.5"/>
+    <path d="M197 65Q202 57 214 57H386Q398 57 403 65L458 192Q461 201 451 201H149Q139 201 142 192Z" fill="none" stroke="#fff" stroke-opacity=".75" stroke-dasharray="3 4"/>
+    <path d="M244 60Q272 124 248 206M338 54Q358 132 326 206M402 86Q420 146 448 198M196 96Q206 150 170 202" fill="none" stroke="#98A1B2" stroke-opacity=".4" stroke-width="2"/>
+    <path d="M262 58Q292 124 270 206M354 56Q376 128 348 206" fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="7" stroke-linecap="round"/>
+  </g>
+  <g class="ss-straps" fill="none" stroke-linecap="round">
+    <path pathLength="1" d="M164 118C140 122 122 134 112 154" stroke="#B9C0CC" stroke-width="8"/>
+    <path pathLength="1" d="M436 118C460 122 478 134 488 154" stroke="#B9C0CC" stroke-width="8"/>
+    <path d="M104 148 120 164M496 148 480 164" stroke="#05070F" stroke-width="3"/>
+  </g>
+  <circle class="ss-pin" cx="112" cy="154" r="10" fill="none" stroke="#0B0E1A" stroke-width="2"/>
+  <circle class="ss-pin" cx="488" cy="154" r="10" fill="none" stroke="#0B0E1A" stroke-width="2"/>
+  <g class="ss-w ss-w--l"><path d="M182 197 300 189" stroke="#05070F" stroke-width="5" stroke-linecap="round"/><path d="M200 199 298 193" stroke="#2B3046" stroke-width="2.5" stroke-linecap="round"/><circle cx="182" cy="197" r="6" fill="#05070F"/></g>
+  <g class="ss-w ss-w--r"><path d="M312 197 430 189" stroke="#05070F" stroke-width="5" stroke-linecap="round"/><path d="M330 199 428 193" stroke="#2B3046" stroke-width="2.5" stroke-linecap="round"/><circle cx="312" cy="197" r="6" fill="#05070F"/></g>
+  <g class="ss-out" stroke="#fff" stroke-width="3" stroke-linecap="round" fill="none"><path d="M409 101l9-9M412 109h12M404 98v-12"/><path d="M439 139l9-9M442 147h12M434 136v-12"/><path d="M369 77l9-9M372 85h12M364 74v-12"/></g>
+  <g class="ss-detail">
+    <path d="M108 148 96 134" stroke="#0B0E1A" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <circle cx="70" cy="74" r="70" fill="#fff"/>
+    <image href="${img('parasolar/chingi-detaliu.webp')}" x="4" y="8" width="132" height="132" clip-path="url(#ss-dc)" preserveAspectRatio="xMidYMid slice"/>
+    <circle cx="70" cy="74" r="70" fill="none" stroke="#0B0E1A" stroke-width="2.5"/>
+  </g>
 </svg>`;
 
 function bindBeam() {
@@ -972,15 +1018,26 @@ function bindBeam() {
   r.addEventListener('input', set); set();
   qsa('[data-kset]', sec).forEach(b => b.addEventListener('click', () => { r.value = b.dataset.kset; set(); }));
 }
-/* sunshade banner: the shade unfolds once when the banner comes into view; the CTA waits for the product page */
+/* sunshade banner: the fitting plays once when the banner comes into view (data-s 0 → 4);
+   the steps under the drawing jump to a step, the round button plays it again. The CTA waits for the product page. */
 function bindSun() {
   const b = qs('[data-sun]'); if (!b) return;
-  const cta = qs('[data-sun-cta]', b);
-  cta.addEventListener('click', e => { e.preventDefault(); toast(t('v2SunSoon'), 'sun'); });
-  if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) { b.classList.add('is-in'); return; }
-  b.classList.add('is-armed');
-  const io = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) { b.classList.add('is-in'); io.disconnect(); } }), { threshold: .35 });
-  io.observe(b);
+  qs('[data-sun-cta]', b).addEventListener('click', e => { e.preventDefault(); toast(t('v2SunSoon'), 'sun'); });
+  const steps = qsa('[data-sun-step]', b);
+  let timers = [];
+  const set = n => {
+    b.dataset.s = n;
+    steps.forEach(x => { const i = +x.dataset.sunStep; x.toggleAttribute('data-done', i < n || n === 4); if (i === n && n < 4) x.setAttribute('aria-current', 'step'); else x.removeAttribute('aria-current'); });
+  };
+  const stop = () => { timers.forEach(clearTimeout); timers = []; };
+  const plan = list => { stop(); let at = 0; list.forEach(([n, wait]) => { at += wait; timers.push(setTimeout(() => set(n), at)); }); };
+  const play = () => plan([[1, 250], [2, 1750], [3, 1600], [4, 900]]);
+  steps.forEach(x => x.addEventListener('click', () => { const n = +x.dataset.sunStep; stop(); set(n); if (n === 3) plan([[4, 900]]); }));
+  qs('[data-sun-replay]', b).addEventListener('click', () => { stop(); set(0); play(); });
+  if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) { set(4); return; }
+  set(0);
+  const io = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) { play(); io.disconnect(); } }), { threshold: .55 });
+  io.observe(qs('.nsun__svg', b));
 }
 /* v2 homepage light/dark switch: html[data-theme=light], remembered per visitor, ?tema=zi|noapte in the link */
 function bindTheme() {
