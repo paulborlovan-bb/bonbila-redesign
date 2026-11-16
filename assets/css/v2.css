@@ -1143,6 +1143,14 @@ h3,h4{font-stretch:100%;font-weight:500;letter-spacing:-.015em}
 .cartbtn .count{box-shadow:0 0 0 2px #0C0E18}
 .hsearch,.mm,.drawer__panel{background:#0A0C14;border:1px solid rgba(255,255,255,.09)}
 .mm__img,.mm__logos a,.dcat{background:var(--studio)}
+.themebtn .ico{width:21px;height:21px}
+.themebtn .i-moon,[data-theme=light] .themebtn .i-sun,[data-theme=light] .drawer__theme .i-sun{display:none}
+[data-theme=light] .themebtn .i-moon,[data-theme=light] .drawer__theme .i-moon{display:block}
+.themebtn[aria-pressed=true]{color:var(--brand)}
+@media (max-width:639px){.themebtn{display:none}}
+.drawer__theme{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:52px;padding:0 4px;border:0;border-top:1px solid var(--line);background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.drawer__theme .i-moon{display:none}
+.drawer__theme[aria-pressed=true]{color:var(--brand)}
 
 /* ---------- homepage sections ---------- */
 .nsec{padding-block:80px}
@@ -1168,35 +1176,30 @@ h3,h4{font-stretch:100%;font-weight:500;letter-spacing:-.015em}
 .nhero__cta{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:6px}
 .ndash{position:relative;display:grid;grid-template-columns:minmax(0,1fr);gap:10px;margin-top:56px;padding:10px;border-radius:30px;background:linear-gradient(180deg,rgba(26,30,52,.78),rgba(10,12,20,.92) 40%);border:1px solid rgba(255,255,255,.11);box-shadow:0 -40px 140px -50px rgba(79,93,255,.9),0 60px 120px -40px #000;-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
 .ndash::before{content:"";position:absolute;left:8%;right:8%;top:-1px;height:1px;background:linear-gradient(90deg,transparent,rgba(160,172,255,.95) 30%,#fff 50%,rgba(255,200,40,.95) 70%,transparent)}
-@media (min-width:1000px){.ndash{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:12px;padding:12px;margin-top:72px}}
-@media (max-width:999px){.ndash .finder{order:-1}}
-@media (max-width:419px){.ndash{padding:6px}.ndash .finder{padding:14px}}
-.ncar{display:flex;flex-direction:column;gap:18px;padding:20px;border-radius:22px;background:#0A0C15;border:1px solid var(--line)}
-.ncar__top{display:flex;align-items:center;justify-content:space-between;gap:10px;color:var(--ink-3);font:500 14px/1 var(--f-data)}
-.ncar__name{display:flex;align-items:center;gap:12px}
-.ncar__name .blogo{--s:30px}
-.ncar__name h2{font:500 clamp(24px,2.3vw,32px)/1.05 var(--f-display);letter-spacing:-.035em}
-.ncar__img{border-radius:16px;overflow:hidden;background:#E3E5E8;aspect-ratio:16/9}
-.ncar__img img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 58%}
-.nstats{display:grid;grid-template-columns:minmax(0,1fr);gap:6px;margin:0}
-.nstats div{display:flex;align-items:baseline;justify-content:space-between;gap:12px;min-width:0;padding:13px 14px;border-radius:14px;background:#0F1220;border:1px solid var(--line)}
-.nstats dt{color:var(--ok);font:500 13.5px/1.2 var(--f-data)}
-.nstats dd{margin:0;font:500 19px/1.1 var(--f-display);letter-spacing:-.025em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ncar__go{align-self:flex-start;margin-top:auto}
-@media (min-width:1000px){
-  .ncar{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);grid-template-rows:auto auto 1fr auto;gap:16px 14px}
-  .ncar__top,.ncar__name{grid-column:1/-1}
-  .ncar__img{position:relative;grid-column:1;grid-row:3/5;aspect-ratio:auto;min-height:200px}
-  .ncar__img img{position:absolute;inset:0}
-  .nstats{grid-column:2;grid-row:3;align-content:start}
-  .ncar__go{grid-column:2;grid-row:4;align-self:end;justify-self:start}
-}
-.ndash .finder{margin:0;padding:20px;border-radius:22px;background:#0A0C15;border:1px solid var(--line);box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
-.ndash .lastcar{display:none}
+@media (min-width:1000px){.ndash{padding:12px;margin-top:72px}}
+@media (max-width:419px){.ndash{padding:6px}}
 #finder{scroll-margin-top:calc(var(--header-h) + 24px)}
-.nmakers{display:flex;flex-wrap:wrap;justify-content:center;gap:14px 44px;margin:64px 0 0;padding:0;list-style:none}
-.nmakers li{font:600 15px/1 var(--f-display);letter-spacing:.14em;color:#5D6476}
-@media (max-width:639px){.nmakers{gap:14px 26px;margin-top:44px}.nmakers li{font-size:13.5px}}
+
+/* the big wipers finder (v2 homepage): brand tiles in one row, then brand, model and the button in one row */
+.finder--big{margin:0;padding:18px;border-radius:22px;background:var(--surface);border:1px solid var(--line);box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+@media (min-width:1000px){.finder--big{padding:30px 32px 32px}}
+.finder__top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 20px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.finder__title{display:flex;align-items:center;gap:12px;font:500 clamp(21px,2.1vw,28px)/1.15 var(--f-display);letter-spacing:-.03em}
+.finder__title .ico{flex:none;width:40px;height:40px;padding:9px;border-radius:12px;background:linear-gradient(135deg,rgba(79,93,255,.42),rgba(69,198,255,.12));border:1px solid rgba(140,155,255,.32);color:#D3D9FF}
+.finder--big .finder__step{margin-top:22px}
+.finder--big .finder__label{margin:0 0 12px;font-size:16px}
+.finder--big .finder__label:not(:first-child){margin-top:26px}
+.finder--big .logos{gap:8px}
+.finder--big .logos button{height:84px;border-radius:16px;font-size:14px}
+.finder--big .logos button .blogo{--s:32px}
+@media (min-width:760px){.finder--big .logos{grid-template-columns:repeat(8,minmax(0,1fr))}.finder--big .logos button{height:100px}.finder--big .logos button .blogo{--s:38px}}
+.finder--big .finder__fields{margin-top:0;gap:10px}
+.finder--big :is(.combo__btn,.select){min-height:60px;font-size:17px;border-radius:16px}
+.finder--big .combo__btn .blogo{--s:28px}
+.finder__go{min-height:60px;margin:0!important;padding-inline:34px;font-size:17px}
+@media (min-width:640px){.finder--big .finder__fields{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.finder__go{grid-column:1/-1}}
+@media (min-width:1000px){.finder--big .finder__fields{grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto}.finder__go{grid-column:auto;min-width:240px}}
+@media (max-width:419px){.finder--big{padding:14px}.finder__top .pill{display:none}}
 
 /* finder on dark */
 .finder{border-color:var(--line)}
@@ -1237,6 +1240,37 @@ h3,h4{font-stretch:100%;font-weight:500;letter-spacing:-.015em}
 .tick__v{text-align:right}
 .tick__v b{display:block;font:600 15px/1.2 var(--f-body);white-space:nowrap}
 .tick__v small{display:block;margin-top:4px;color:var(--ok);font:500 13.5px/1.2 var(--f-data);white-space:nowrap}
+
+/* ---------- Bonbila's own windshield sunshade: a yellow banner, container width ---------- */
+.nsec--sun{padding-top:0}
+.nsun{position:relative;isolation:isolate;overflow:hidden;display:grid;gap:8px;padding:28px 22px 0;border-radius:30px;color:#0B0E1A;
+  background:radial-gradient(52% 70% at 86% 6%,#FFF7D6 0%,rgba(255,247,214,.55) 32%,rgba(255,247,214,0) 64%),radial-gradient(70% 110% at 0% 100%,#F2A400 0%,rgba(242,164,0,0) 62%),#FFC20E;
+  box-shadow:0 60px 140px -70px rgba(255,194,14,.8)}
+@media (min-width:1000px){.nsun{grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);align-items:end;gap:32px;padding:60px 32px 0 60px}}
+.nsun__copy{display:grid;justify-items:start;align-content:center;gap:20px;align-self:center}
+@media (min-width:1000px){.nsun__copy{padding-bottom:60px}}
+.nsun__tags{display:flex;flex-wrap:wrap;gap:8px}
+.nsun__tags span{display:inline-flex;align-items:center;height:32px;padding:0 13px;border-radius:999px;font:600 14px/1 var(--f-body)}
+.nsun__new{background:#0B0E1A;color:#FFC20E}
+.nsun__by{background:rgba(11,14,26,.07);border:1px solid rgba(11,14,26,.18)}
+.nsun h2{font:500 clamp(38px,5vw,72px)/.98 var(--f-display);letter-spacing:-.05em;text-wrap:balance}
+.nsun__lead{max-width:44ch;color:rgba(11,14,26,.8);font-size:clamp(16.5px,1.3vw,18.5px);line-height:1.55}
+.nsun__f{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
+.nsun__f li{display:inline-flex;align-items:center;gap:9px;min-height:40px;padding:5px 14px 5px 5px;border-radius:999px;background:rgba(255,255,255,.42);border:1px solid rgba(11,14,26,.1);font:500 15px/1.2 var(--f-body)}
+.nsun__f li span{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#0B0E1A;color:#FFC20E}
+.nsun__f .ico{width:16px;height:16px}
+.btn--ink{display:inline-flex;align-items:center;gap:10px;background:#0B0E1A;border-color:#0B0E1A;color:#fff;transition:transform .2s var(--ease),box-shadow .3s}
+.btn--ink:hover{transform:translateY(-2px);box-shadow:0 18px 40px -16px rgba(11,14,26,.7)}
+.btn--ink:focus-visible{outline:3px solid #0B0E1A;outline-offset:3px}
+.nsun__art{position:relative;margin:0 -8px}
+@media (min-width:1000px){.nsun__art{margin:0}}
+.nsun__svg{display:block;width:100%;height:auto;filter:drop-shadow(0 30px 40px rgba(120,70,0,.35))}
+.nsun__shade{transform-box:fill-box;transform-origin:50% 50%}
+.nsun.is-armed .nsun__shade{transform:scaleX(.06);opacity:.4}
+.nsun.is-in .nsun__shade{transform:none;opacity:1;transition:transform 1.2s cubic-bezier(.16,1,.3,1) .15s,opacity .4s .15s}
+.nsun__tag{position:absolute;left:50%;top:0;transform:translate(-50%,-70%);white-space:nowrap;display:inline-flex;align-items:center;gap:9px;padding:10px 14px;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.9);box-shadow:0 12px 30px -14px rgba(120,70,0,.5);font:600 14.5px/1.1 var(--f-body);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.nsun__dot{width:9px;height:9px;border-radius:50%;background:#FFC20E;box-shadow:0 0 0 3px #0B0E1A}
+@media (max-width:999px){.nsun__art{display:grid}.nsun__tag{position:static;transform:none;white-space:normal;margin:10px 0 4px;justify-self:start}}
 
 /* ---------- categories: gradient bento, each product as the lit object ---------- */
 .bento{display:grid;gap:12px}
@@ -1307,41 +1341,6 @@ h3,h4{font-stretch:100%;font-weight:500;letter-spacing:-.015em}
 .beam__floor::after{content:"";position:absolute;left:18%;right:0;top:46%;height:3px;background:repeating-linear-gradient(90deg,color-mix(in srgb,var(--kc) 70%,transparent) 0 46px,transparent 46px 92px);-webkit-mask:linear-gradient(90deg,#000,transparent);mask:linear-gradient(90deg,#000,transparent)}
 .beam__k{display:none}
 @media (max-width:639px){.kwin__bar{padding:10px}.kwin__t{display:none}.kwin__bar .seg{width:100%}.kwin__bar .seg button{flex:1}.beam__stage{aspect-ratio:4/3}}
-
-/* ---------- most searched: a market-style table with pill actions ---------- */
-.mwrap{display:grid;justify-items:center;padding:6px 6px 22px;border-radius:var(--r-xl);background:var(--surface);border:1px solid var(--line)}
-.mtable{width:100%;border-collapse:separate;border-spacing:0}
-.mtable th{padding:16px 16px 14px;border-bottom:1px solid var(--line);text-align:left;color:var(--ink-3);font:500 13.5px/1 var(--f-data)}
-.mtable td{padding:12px 16px;border-bottom:1px solid var(--line);vertical-align:middle}
-.mtable tbody tr:last-child td{border-bottom:0}
-.mtable tbody tr:hover td{background:rgba(255,255,255,.025)}
-.mtable .num{text-align:right}
-.mt__p{display:flex;align-items:center;gap:14px;min-width:0;text-decoration:none;color:inherit}
-.mt__img{flex:none;display:grid;place-items:center;width:56px;height:56px;border-radius:12px;background:var(--studio);overflow:hidden}
-.mt__img img{width:86%;height:86%;object-fit:contain;mix-blend-mode:multiply}
-.mt__n{min-width:0}
-.mt__n small{display:block;color:var(--ink-3);font:500 13px/1.2 var(--f-data)}
-.mt__n b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;max-width:40ch;margin-top:3px;font:500 15.5px/1.3 var(--f-body)}
-.mt__p:hover b{text-decoration:underline;text-decoration-color:var(--ink-3);text-underline-offset:3px}
-.mt__spec .dims{min-width:150px;max-width:210px}
-.mtable .stock{font-size:14px;white-space:nowrap}
-.mtable .price{font-size:17px;white-space:nowrap}
-.mtable .price del{display:block;font-size:13px}
-.mt__act{text-align:right;white-space:nowrap}
-.pill--more{margin-top:18px}
-@media (max-width:899px){
-  .mtable thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
-  .mtable,.mtable tbody{display:block}
-  .mtable tr{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"p p" "s s" "pr act";gap:10px 12px;padding:16px 10px;border-bottom:1px solid var(--line)}
-  .mtable tbody tr:last-child{border-bottom:0}
-  .mtable td{display:block;padding:0;border:0!important;background:none!important}
-  .mtable td:first-child{grid-area:p}
-  .mt__spec{grid-area:s;padding-left:70px!important}
-  .mt__st{display:none!important}
-  .mtable .num{grid-area:pr;align-self:center;text-align:left;padding-left:70px!important}
-  .mt__act{grid-area:act;align-self:center}
-}
-@media (max-width:399px){.mt__act .pill span{display:none}.mt__act .pill--add{width:40px;height:40px;padding:0;justify-content:center}}
 
 /* ---------- how it works: numbered steps beside a lit photo card ---------- */
 .nhow{display:grid;gap:12px}
@@ -1448,3 +1447,99 @@ h3,h4{font-stretch:100%;font-weight:500;letter-spacing:-.015em}
 .gen__count .badge{background:rgba(6,7,12,.78);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 .gen__count .badge--brand{background:var(--brand);color:var(--on-light)}
 .gen__count .badge--ok{color:var(--ok)}
+
+/* ==========================================================================
+   Light mode ("LED day"), v2 homepage only: html[data-theme=light], set by the
+   switch in the header or by ?tema=zi. Same two headlights as soft washes on a
+   pale page; the header capsule, the light-simulator road and the footer stay night.
+   ========================================================================== */
+[data-theme=light]{
+  --bg:#F3F4F8; --surface:#FFFFFF; --tile:#EEF0F5;
+  --ink:#0B0E1A; --sel:#0B0E1A;
+  --warm-ink:#8A5A00; --glow-ink:#3A46D8;
+  color-scheme:light;
+}
+[data-theme=light],[data-theme=light] :is(.topbar,.suggest,.combo__pop,.modal__panel,.sheet__panel){
+  --ink-2:#3E4558;           /* 9.6:1 on white */
+  --ink-3:#5C6376;           /* 6:1 on white, 5.4:1 on the page */
+  --line:rgba(11,14,26,.09);
+  --line-2:rgba(11,14,26,.17);
+  --bg-2:rgba(11,14,26,.045);
+  --field:#FFFFFF;
+  --chev:var(--chev-dark);
+  --ok:#11793A; --ok-soft:#E2F3E8;
+  --warn:#8F5300; --warn-soft:#FFF0D2;
+  --bad:#B42323; --bad-soft:#FBE8E6;
+  --focus:#3A46D8;
+  --shadow-pop:0 1px 2px rgba(11,14,26,.06),0 24px 48px -16px rgba(11,14,26,.25);
+}
+/* night pieces keep their night tokens */
+[data-theme=light] :is(.header,.drawer__panel,.footer,.is-night){
+  --bg:#04050A; --surface:#0A0C14; --tile:#121522; --ink:#F3F5FA; --sel:#F3F5FA; --warm-ink:#FFD456; --glow-ink:#AEB6FF; --focus:#FFC20E;
+  color:var(--ink);
+}
+[data-theme=light] .footer{background:#04050A;border-top:0}
+[data-theme=light] .hbar{background:rgba(11,14,26,.9);border-color:rgba(11,14,26,.9);box-shadow:0 18px 40px -22px rgba(11,14,26,.6)}
+[data-theme=light] .header.is-scrolled .hbar{background:rgba(9,11,19,.94)}
+[data-theme=light] .topbar{color:var(--ink)}
+[data-theme=light] .topbar li,[data-theme=light] .topbar a{color:var(--ink-3)}
+
+/* buttons, pills, segmented controls */
+[data-theme=light] .btn--ghost,[data-theme=light] .btn--glass{background:#fff;border-color:var(--line-2);color:var(--ink)}
+[data-theme=light] .btn--glass:hover{background:#fff;border-color:var(--ink-3)}
+[data-theme=light] .btn--glass .ico{color:var(--ink-3)}
+[data-theme=light] .pill{background:#fff;border-color:var(--line-2)}
+[data-theme=light] .pill:hover{border-color:var(--ink-3)}
+[data-theme=light] .seg{background:var(--tile);border-color:var(--line)}
+[data-theme=light] .seg button[aria-pressed=true]{color:#fff}
+
+/* hero: the two headlights as daylight washes */
+[data-theme=light] .nhero__glow{background:radial-gradient(40% 52% at 30% 0%,rgba(79,93,255,.38) 0%,rgba(79,93,255,.12) 48%,rgba(79,93,255,0) 76%),radial-gradient(38% 50% at 71% 0%,rgba(255,194,14,.62) 0%,rgba(255,194,14,.2) 48%,rgba(255,194,14,0) 74%)}
+[data-theme=light] .nhero__glow span{background:linear-gradient(90deg,rgba(11,14,26,.05) 1px,transparent 1px) 0 0/72px 72px,linear-gradient(0deg,rgba(11,14,26,.05) 1px,transparent 1px) 0 0/72px 72px}
+[data-theme=light] .nhero__h{text-shadow:none}
+[data-theme=light] .nhero .npill{background:rgba(255,255,255,.75);border-color:var(--line-2);color:var(--ink-2)}
+[data-theme=light] .ndash{background:rgba(255,255,255,.6);border-color:rgba(11,14,26,.08);box-shadow:-120px -40px 140px -90px rgba(79,93,255,.55),120px -40px 140px -90px rgba(255,194,14,.7),0 40px 80px -40px rgba(11,14,26,.22)}
+[data-theme=light] .finder__title .ico{background:rgba(79,93,255,.1);border-color:rgba(79,93,255,.22);color:#3A46D8}
+[data-theme=light] .finder__label .num{border-color:rgba(176,120,0,.45);color:#8A5A00}
+[data-theme=light] .logos button{background:var(--tile);border-color:transparent;color:var(--ink-2)}
+[data-theme=light] .logos button:hover{background:#fff;border-color:var(--line-2);color:var(--ink)}
+[data-theme=light] .logos button[aria-pressed=true]{background:#FFF8E1;border-color:var(--brand);color:var(--ink)}
+
+/* ticker */
+[data-theme=light] .tick:hover{background:#FFF9E6;border-color:rgba(214,150,0,.5)}
+[data-theme=light] .ticker__row--rev .tick:hover{background:#F1F2FF;border-color:rgba(79,93,255,.4)}
+[data-theme=light] .tick__ic{background:#FFF3C9;border-color:rgba(214,150,0,.3);color:#8A5A00}
+[data-theme=light] .ticker__row--rev .tick__ic{background:#ECEEFF;border-color:rgba(79,93,255,.22);color:#3A46D8}
+
+/* bento: the LED and wiper tiles stay saturated, halogen and parts turn to daylight */
+[data-theme=light] .bcard{border-color:rgba(11,14,26,.07)}
+[data-theme=light] :is(.bcard--hal,.bcard--parts){color:var(--ink)}
+[data-theme=light] .bcard--hal{background:radial-gradient(70% 60% at 75% 62%,rgba(255,184,40,.5),rgba(255,184,40,0) 70%),#FFF6DA}
+[data-theme=light] .bcard--parts{background:radial-gradient(42% 110% at 84% 55%,rgba(255,194,14,.35),rgba(255,170,0,0) 70%),radial-gradient(50% 120% at 0% 100%,rgba(79,93,255,.2),rgba(79,93,255,0) 70%),#fff}
+[data-theme=light] :is(.bcard--hal,.bcard--parts) .bcard__t small{color:var(--ink-2)}
+[data-theme=light] :is(.bcard--hal,.bcard--parts) .bcard__foot small{color:var(--ink-3)}
+[data-theme=light] :is(.bcard--hal,.bcard--parts) .bcard__chips span{background:rgba(255,255,255,.7);border-color:rgba(11,14,26,.12)}
+[data-theme=light] .bcard--parts .bcard__btn{background:#0B0E1A;color:#fff;border:0}
+[data-theme=light] :is(.bcard--hal,.bcard--parts) .bcard__img img{filter:drop-shadow(0 24px 30px rgba(60,40,0,.28))}
+
+/* light simulator: a white window around the night road */
+[data-theme=light] .kwin{box-shadow:-140px 50px 120px -80px rgba(79,93,255,.4),140px 50px 120px -80px rgba(255,194,14,.5),0 30px 70px -40px rgba(11,14,26,.25)}
+[data-theme=light] .beam__read b{color:var(--ink);text-shadow:none}
+[data-theme=light] .kslide input::-webkit-slider-thumb{box-shadow:0 0 0 4px #fff,0 0 0 5px rgba(11,14,26,.2),0 4px 14px rgba(11,14,26,.3)}
+[data-theme=light] .kslide input::-moz-range-thumb{box-shadow:0 0 0 4px #fff,0 0 0 5px rgba(11,14,26,.2),0 4px 14px rgba(11,14,26,.3)}
+
+/* how it works, brands, guides */
+[data-theme=light] .nhow__list li{background:var(--tile);border-color:transparent}
+[data-theme=light] .nhow__n{color:#9A6600}
+[data-theme=light] .brandwall a:hover{background:#FFF9E6;border-color:rgba(214,150,0,.5);color:var(--ink)}
+[data-theme=light] .guide:hover{border-color:rgba(79,93,255,.35)}
+[data-theme=light] .nmark{background:linear-gradient(90deg,rgba(79,93,255,.42),rgba(255,184,0,.6));-webkit-background-clip:text;background-clip:text}
+
+/* banners and the photo card carry their own night colours in both modes */
+.nreq,.nphoto__card{
+  --ink:#F3F5FA; --ink-2:#A9B0C0; --ink-3:#7D8597; --line:rgba(255,255,255,.08); --line-2:rgba(255,255,255,.15);
+  --field:rgba(255,255,255,.035); --chev:var(--chev-light); --ok:#3DDC8A; --ok-soft:rgba(61,220,138,.12); --focus:#FFC20E;
+  --warm-ink:#FFD456; --glow-ink:#AEB6FF;
+  color:var(--ink);
+}
+[data-theme=light] .nreq{box-shadow:-160px 60px 140px -100px rgba(79,93,255,.7),160px 60px 140px -100px rgba(255,194,14,.6)}

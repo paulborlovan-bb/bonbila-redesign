@@ -34,6 +34,8 @@ const NOSCRIPT = {
   de: 'Für diesen Prototyp wird JavaScript benötigt. Auf der WordPress-Seite funktionieren dieselben Komponenten auch ohne.',
 };
 
+// v2 homepage only: pick light or dark before the first paint (?tema=zi|light or noapte|dark, else the visitor's last choice)
+const THEME = `<script>(function(){var k='bb_tema',q=new URLSearchParams(location.search).get('tema'),v=q?(q==='zi'||q==='light'?'light':'dark'):null;try{if(v)localStorage.setItem(k,v);else v=localStorage.getItem(k)}catch(e){}if(v==='light')document.documentElement.dataset.theme='light'})()</script>`;
 const shell = (p, lang, v2 = false) => {
   const r = (v2 ? '../' : '') + (lang === 'de' ? '../' : '');
   const dir = v2 ? 'v2/' : '';
@@ -54,7 +56,7 @@ const shell = (p, lang, v2 = false) => {
 <link rel="icon" type="image/png" href="${r}assets/img/favicon.png">
 <link rel="apple-touch-icon" href="${r}assets/img/apple-touch-icon.png">
 ${fonts.map(f => `<link rel="preload" href="${r}assets/fonts/${f}" as="font" type="font/woff2" crossorigin>`).join('\n')}
-<link rel="stylesheet" href="${r}assets/css/${v2 ? 'v2' : 'style'}.css">
+${v2 && p.page === 'home' ? THEME + '\n' : ''}<link rel="stylesheet" href="${r}assets/css/${v2 ? 'v2' : 'style'}.css">
 <script src="${r}assets/js/data.js" defer></script>
 <script src="${r}assets/js/i18n.js" defer></script>
 <script src="${r}assets/js/app.js" defer></script>
